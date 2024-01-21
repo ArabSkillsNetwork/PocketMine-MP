@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7a3fceea557add1b8cb461554db1ee7",
+    "content-hash": "b0bbe6570776fde7f02310419494a8fd",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -200,16 +200,16 @@
         },
         {
             "name": "pocketmine/bedrock-protocol",
-            "version": "26.0.0+bedrock-1.20.50",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pmmp/BedrockProtocol.git",
-                "reference": "f278a0b6d4fa1e2e0408a125f323a3118b1968df"
+                "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
+                "reference": "3a1ba183a52419b42fb89d5c5e62c7cb3c6fa048"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/f278a0b6d4fa1e2e0408a125f323a3118b1968df",
-                "reference": "f278a0b6d4fa1e2e0408a125f323a3118b1968df",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/3a1ba183a52419b42fb89d5c5e62c7cb3c6fa048",
+                "reference": "3a1ba183a52419b42fb89d5c5e62c7cb3c6fa048",
                 "shasum": ""
             },
             "require": {
@@ -228,22 +228,31 @@
                 "phpstan/phpstan-strict-rules": "^1.0.0",
                 "phpunit/phpunit": "^9.5 || ^10.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "pocketmine\\network\\mcpe\\protocol\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "pocketmine\\network\\mcpe\\protocol\\": "tests/phpunit/"
+                }
+            },
+            "scripts": {
+                "update-create-methods": [
+                    "@php tools/generate-create-static-methods.php"
+                ]
+            },
             "license": [
                 "LGPL-3.0"
             ],
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
-                "issues": "https://github.com/pmmp/BedrockProtocol/issues",
-                "source": "https://github.com/pmmp/BedrockProtocol/tree/26.0.0+bedrock-1.20.50"
+                "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2023-12-06T14:08:37+00:00"
+            "time": "2024-01-20T01:53:52+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -2931,7 +2940,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "pocketmine/bedrock-protocol": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -2966,5 +2977,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

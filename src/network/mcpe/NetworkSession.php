@@ -174,6 +174,8 @@ class NetworkSession{
 	 */
 	private ObjectSet $disposeHooks;
 
+	private string $xuid = "";
+
 	public function __construct(
 		private Server $server,
 		private NetworkSessionManager $manager,
@@ -302,6 +304,10 @@ class NetworkSession{
 
 	public function getDisplayName() : string{
 		return $this->info !== null ? $this->info->getUsername() : $this->ip . " " . $this->port;
+	}
+
+	public function getXuid(): string{
+		return $this->xuid;
 	}
 
 	/**
