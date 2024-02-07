@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d923f5fd75f0d33eb5198268a74a58b4",
+    "content-hash": "bafe2b1e52a40ba20c7ec11c927e0297",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -200,7 +200,6 @@
         },
         {
             "name": "pocketmine/bedrock-protocol",
-<<<<<<< HEAD
             "version": "dev-master",
             "source": {
                 "type": "git",
@@ -211,18 +210,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/3a1ba183a52419b42fb89d5c5e62c7cb3c6fa048",
                 "reference": "3a1ba183a52419b42fb89d5c5e62c7cb3c6fa048",
-=======
-            "version": "27.0.1+bedrock-1.20.60",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pmmp/BedrockProtocol.git",
-                "reference": "0cebb55f6e904f722b14d420f6b2c84c7fa69f10"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/0cebb55f6e904f722b14d420f6b2c84c7fa69f10",
-                "reference": "0cebb55f6e904f722b14d420f6b2c84c7fa69f10",
->>>>>>> upstream/stable
                 "shasum": ""
             },
             "require": {
@@ -263,16 +250,9 @@
             ],
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
-<<<<<<< HEAD
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
             "time": "2024-01-20T01:53:52+00:00"
-=======
-                "issues": "https://github.com/pmmp/BedrockProtocol/issues",
-                "source": "https://github.com/pmmp/BedrockProtocol/tree/27.0.1+bedrock-1.20.60"
-            },
-            "time": "2024-02-07T11:53:50+00:00"
->>>>>>> upstream/stable
         },
         {
             "name": "pocketmine/binaryutils",
