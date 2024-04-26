@@ -553,7 +553,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 			return;
 		}
 		unset($this->hiddenPlayers[$player->getUniqueId()->getBytes()]);
-		if($player->isOnline()){
+		if($player->isConnected()){
 			$player->spawnTo($this);
 		}
 	}
