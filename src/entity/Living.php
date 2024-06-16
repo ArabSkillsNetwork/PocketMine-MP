@@ -125,6 +125,7 @@ abstract class Living extends Entity{
 	protected bool $sneaking = false;
 	protected bool $gliding = false;
 	protected bool $swimming = false;
+	protected bool $switching = false;
 
 	protected function getInitialDragMultiplier() : float{ return 0.02; }
 
@@ -247,6 +248,14 @@ abstract class Living extends Entity{
 			$this->setMovementSpeed($value ? ($moveSpeed * 1.3) : ($moveSpeed / 1.3));
 			$this->moveSpeedAttr->markSynchronized(false); //TODO: reevaluate this hack
 		}
+	}
+
+	public function setSwitching(bool $value = true) : void{
+		$this->switching = $value;
+	}
+
+	public function isSwitchingEnabled() : bool{
+		return $this->switching;
 	}
 
 	public function isGliding() : bool{
@@ -555,9 +564,7 @@ abstract class Living extends Entity{
 			return;
 		}
 
-		if($this->attackTime <= 0){
-			//this logic only applies if the entity was cold attacked
-
+		if ($this->isSwitchingEnabled()){
 			$this->attackTime = $source->getAttackCooldown();
 
 			if($source instanceof EntityDamageByChildEntityEvent){
@@ -576,12 +583,38 @@ abstract class Living extends Entity{
 			}
 
 			if($this->isAlive()){
+				$this->applyPostDamageEffects($source);
 				$this->doHitAnimation();
 			}
-		}
-
-		if($this->isAlive()){
-			$this->applyPostDamageEffects($source);
+		} else {
+			if($this->attackTime <= 0){
+				//this logic only applies if the entity was cold attacked
+	
+				$this->attackTime = $source->getAttackCooldown();
+	
+				if($source instanceof EntityDamageByChildEntityEvent){
+					$e = $source->getChild();
+					if($e !== null){
+						$motion = $e->getMotion();
+						$this->knockBack($motion->x, $motion->z, $source->getKnockBack(), $source->getVerticalKnockBackLimit());
+					}
+				}elseif($source instanceof EntityDamageByEntityEvent){
+					$e = $source->getDamager();
+					if($e !== null){
+						$deltaX = $this->location->x - $e->location->x;
+						$deltaZ = $this->location->z - $e->location->z;
+						$this->knockBack($deltaX, $deltaZ, $source->getKnockBack(), $source->getVerticalKnockBackLimit());
+					}
+				}
+	
+				if($this->isAlive()){
+					$this->doHitAnimation();
+				}
+			}
+	
+			if($this->isAlive()){
+				$this->applyPostDamageEffects($source);
+			}
 		}
 	}
 
