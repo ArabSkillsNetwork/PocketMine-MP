@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6c82a055ce04dce1f338af4cfaa87c1",
+    "content-hash": "33ebff6849f5621007b7b8c1084a3a2c",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -209,12 +209,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "f0b78c2b2592ed8097b07ae6c04f2ee0e57240f7"
+                "reference": "c95204b4f457e4936763a1d12545b4612c091da4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/f0b78c2b2592ed8097b07ae6c04f2ee0e57240f7",
-                "reference": "f0b78c2b2592ed8097b07ae6c04f2ee0e57240f7",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/c95204b4f457e4936763a1d12545b4612c091da4",
+                "reference": "c95204b4f457e4936763a1d12545b4612c091da4",
                 "shasum": ""
             },
             "require": {
@@ -256,7 +256,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2024-08-13T19:13:57+00:00"
+            "time": "2024-08-16T15:05:06+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
