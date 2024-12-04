@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67cd788438a04abb19fb97b3e9f07cd9",
+    "content-hash": "c8163dba967333ddb9ae80b21ab22c49",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -209,12 +209,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "1d1883521229e8c72e57d51d6e7b2878b93fbd25"
+                "reference": "a3672cf7901e0a856d191b10b16b08463298577e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/1d1883521229e8c72e57d51d6e7b2878b93fbd25",
-                "reference": "1d1883521229e8c72e57d51d6e7b2878b93fbd25",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/a3672cf7901e0a856d191b10b16b08463298577e",
+                "reference": "a3672cf7901e0a856d191b10b16b08463298577e",
                 "shasum": ""
             },
             "require": {
@@ -256,13 +256,20 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2024-12-01T14:10:19+00:00"
+            "time": "2024-12-04T21:16:52+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
+            "version": "0.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BinaryUtils.git",
+                "reference": "ccfc1899b859d45814ea3592e20ebec4cb731c84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmmp/BinaryUtils/zipball/ccfc1899b859d45814ea3592e20ebec4cb731c84",
+                "reference": "ccfc1899b859d45814ea3592e20ebec4cb731c84",
                 "shasum": ""
             },
             "require": {
@@ -619,6 +626,7 @@
                 "issues": "https://github.com/cweiske/jsonmapper/issues",
                 "source": "https://github.com/pmmp/netresearch-jsonmapper/tree/v4.4.999"
             },
+            "abandoned": true,
             "time": "2024-02-23T13:17:01+00:00"
         },
         {
