@@ -35,6 +35,7 @@ use pocketmine\event\entity\EntityMotionEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\item\Item;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector2;
@@ -74,7 +75,6 @@ use function deg2rad;
 use function floor;
 use function fmod;
 use function get_class;
-use function lcg_value;
 use function sin;
 use function spl_object_id;
 use const M_PI_2;
@@ -909,7 +909,7 @@ abstract class Entity{
 				return false;
 			}
 
-			$force = lcg_value() * 0.2 + 0.1;
+			$force = Utils::getRandomFloat() * 0.2 + 0.1;
 
 			$this->motion = match($direction){
 				Facing::WEST => $this->motion->withComponents(-$force, null, null),
@@ -1561,6 +1561,13 @@ abstract class Entity{
 			fn(EntityEventBroadcaster $broadcaster, array $recipients) => $broadcaster->onEntityRemoved($recipients, $this)
 		);
 		$this->hasSpawned = [];
+	}
+
+	/**
+	 * Returns the item that players will equip when middle-clicking on this entity.
+	 */
+	public function getPickedItem() : ?Item{
+		return null;
 	}
 
 	/**

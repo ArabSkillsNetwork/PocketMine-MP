@@ -90,7 +90,7 @@ class LightPopulationTask extends AsyncTask{
 
 		/**
 		 * @var \Closure
-		 * @phpstan-var \Closure(array<int, LightArray> $blockLight, array<int, LightArray> $skyLight, array<int, int> $heightMap>) : void
+		 * @phpstan-var \Closure(array<int, LightArray> $blockLight, array<int, LightArray> $skyLight, array<int, int> $heightMap) : void
 		 */
 		$callback = $this->fetchLocal(self::TLS_KEY_COMPLETION_CALLBACK);
 		$callback($blockLightArrays, $skyLightArrays, $heightMapArray);
