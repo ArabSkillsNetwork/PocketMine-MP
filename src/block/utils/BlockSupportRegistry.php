@@ -395,7 +395,7 @@ final class BlockSupportRegistry{
 		}
 
 		if (isset($this->supportTypesClosures[($group = self::getBlockGroup($block))])){
-			return $this->supportTypesClosures[$group]($block);
+			return $this->supportTypesClosures[$group]($block, ...$args);
 		}
 
 		return false;
