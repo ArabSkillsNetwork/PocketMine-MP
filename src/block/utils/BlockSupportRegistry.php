@@ -86,7 +86,7 @@ final class BlockSupportRegistry{
 
 		$this->register(fn(Block $b) => $b instanceof BaseCake, function (Block $block){
 			return $block->getSide(Facing::DOWN)->getTypeId() !== BlockTypeIds::AIR;
-		}, false, self::GROUP_BAMBOO);
+		}, false, self::GROUP_CAKE);
 
 		$this->register([VanillaBlocks::BED()], function (Block $blockIn, Block $block){
 			return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
