@@ -25,6 +25,7 @@ namespace pocketmine\block;
 
 use pocketmine\block\utils\AmethystTrait;
 use pocketmine\block\utils\AnyFacingTrait;
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\FortuneDropHelper;
 use pocketmine\block\utils\SupportType;
 use pocketmine\data\runtime\RuntimeDataDescriber;
@@ -89,7 +90,7 @@ final class AmethystCluster extends Transparent{
 	}
 
 	private function canBeSupportedAt(Block $block, int $facing) : bool{
-		return $block->getAdjacentSupportType($facing) === SupportType::FULL;
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block, $facing);
 	}
 
 	public function getSupportType(int $facing) : SupportType{

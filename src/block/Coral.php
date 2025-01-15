@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
-use pocketmine\math\Facing;
 
 final class Coral extends BaseCoral{
 	use StaticSupportTrait;
 
 	private function canBeSupportedAt(Block $block) : bool{
-		return $block->getAdjacentSupportType(Facing::DOWN)->hasCenterSupport();
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 }

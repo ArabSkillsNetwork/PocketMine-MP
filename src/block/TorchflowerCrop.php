@@ -24,13 +24,13 @@ declare(strict_types=1);
 namespace pocketmine\block;
 
 use pocketmine\block\utils\BlockEventHelper;
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\CropGrowthHelper;
 use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\item\Fertilizer;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
-use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
@@ -51,7 +51,7 @@ final class TorchflowerCrop extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{
-		return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 
 	private function getNextState() : Block{

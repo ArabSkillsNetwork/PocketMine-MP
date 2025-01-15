@@ -27,6 +27,7 @@ use pocketmine\block\Block;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\Location;
 use pocketmine\entity\object\FallingBlock;
+use pocketmine\event\block\BlockFallEvent;
 use pocketmine\math\Facing;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\world\Position;
@@ -46,10 +47,20 @@ trait FallableTrait{
 		$world = $pos->getWorld();
 		$down = $world->getBlock($pos->getSide(Facing::DOWN));
 		if($down->canBeReplaced()){
-			$world->setBlock($pos, VanillaBlocks::AIR());
 
 			$block = $this;
 			if(!($block instanceof Block)) throw new AssumptionFailedError(__TRAIT__ . " should only be used by Blocks");
+
+			/**
+			 * I'm not sure if this will have an impact on the game, but this is a temporary solution for now.
+			 */
+			($event = new BlockFallEvent($block))->call();
+
+			if ($event->isCancelled()) {
+				return;
+			}
+
+			$world->setBlock($pos, VanillaBlocks::AIR());
 
 			$fall = new FallingBlock(Location::fromObject($pos->add(0.5, 0, 0.5), $world), $block);
 			$fall->spawnToAll();

@@ -23,16 +23,16 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
-use pocketmine\math\Facing;
 
 final class HangingRoots extends Flowable{
 	use StaticSupportTrait;
 
 	private function canBeSupportedAt(Block $block) : bool{
-		return $block->getAdjacentSupportType(Facing::UP)->hasCenterSupport(); //weird I know, but they can be placed on the bottom of fences
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 
 	public function getDropsForIncompatibleTool(Item $item) : array{

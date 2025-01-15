@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace pocketmine\block;
 
 use pocketmine\block\utils\AnyFacingTrait;
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\item\Item;
-use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\BlockTransaction;
@@ -89,6 +89,6 @@ abstract class Button extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block, int $face) : bool{
-		return $block->getAdjacentSupportType(Facing::opposite($face))->hasCenterSupport();
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block, $face);
 	}
 }

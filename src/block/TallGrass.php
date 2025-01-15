@@ -23,16 +23,15 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\block\utils\TallGrassTrait;
-use pocketmine\math\Facing;
 
 class TallGrass extends Flowable{
 	use TallGrassTrait;
 	use StaticSupportTrait;
 
 	private function canBeSupportedAt(Block $block) : bool{
-		$supportBlock = $block->getSide(Facing::DOWN);
-		return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 }

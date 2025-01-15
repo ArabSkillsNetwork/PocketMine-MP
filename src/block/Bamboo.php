@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\block\utils\SupportType;
 use pocketmine\data\runtime\RuntimeDataDescriber;
@@ -123,13 +124,7 @@ class Bamboo extends Transparent{
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{
-		$supportBlock = $block->getSide(Facing::DOWN);
-		return
-			$supportBlock->hasSameTypeId($this) ||
-			$supportBlock->getTypeId() === BlockTypeIds::GRAVEL ||
-			$supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
-			$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-			$supportBlock->hasTypeTag(BlockTypeTags::SAND);
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 
 	private function seekToTop() : Bamboo{

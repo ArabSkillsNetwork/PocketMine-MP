@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
-use pocketmine\math\Axis;
 use pocketmine\math\AxisAlignedBB;
-use pocketmine\math\Facing;
 use function mt_rand;
 
 final class ChorusPlant extends Flowable{
@@ -51,27 +50,7 @@ final class ChorusPlant extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{
-		$position = $block->position;
-		$world = $position->getWorld();
-
-		$down = $world->getBlock($position->down());
-		$verticalAir = $down->getTypeId() === BlockTypeIds::AIR || $world->getBlock($position->up())->getTypeId() === BlockTypeIds::AIR;
-
-		foreach($position->sidesAroundAxis(Axis::Y) as $sidePosition){
-			$block = $world->getBlock($sidePosition);
-
-			if($block->getTypeId() === BlockTypeIds::CHORUS_PLANT){
-				if(!$verticalAir){
-					return false;
-				}
-
-				if($this->canBeSupportedBy($block->getSide(Facing::DOWN))){
-					return true;
-				}
-			}
-		}
-
-		return $this->canBeSupportedBy($down);
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 
 	public function getDropsForCompatibleTool(Item $item) : array{

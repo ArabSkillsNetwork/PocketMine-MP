@@ -25,10 +25,10 @@ namespace pocketmine\block;
 
 use pocketmine\block\tile\Comparator;
 use pocketmine\block\utils\AnalogRedstoneSignalEmitterTrait;
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\HorizontalFacingTrait;
 use pocketmine\block\utils\PoweredByRedstoneTrait;
 use pocketmine\block\utils\StaticSupportTrait;
-use pocketmine\block\utils\SupportType;
 use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\item\Item;
 use pocketmine\math\AxisAlignedBB;
@@ -100,7 +100,7 @@ class RedstoneComparator extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{
-		return $block->getAdjacentSupportType(Facing::DOWN) !== SupportType::NONE;
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 
 	//TODO: redstone functionality

@@ -21,15 +21,21 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\block;
+namespace pocketmine\event\block;
 
-use pocketmine\block\utils\BlockSupportRegistry;
-use pocketmine\block\utils\StaticSupportTrait;
+use pocketmine\block\Block;
+use pocketmine\event\Cancellable;
+use pocketmine\event\CancellableTrait;
 
-final class NetherRoots extends Flowable{
-	use StaticSupportTrait;
+/**
+ * Called when a block, such as sand or gravel, is about to fall.
+ */
+class BlockFallEvent extends BlockEvent implements Cancellable{
+	use CancellableTrait;
 
-	private function canBeSupportedAt(Block $block) : bool{
-		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
+	public function __construct(
+		Block $block,
+	){
+		parent::__construct($block);
 	}
 }

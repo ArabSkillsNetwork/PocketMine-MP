@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\LeverFacing;
 use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\item\Item;
@@ -102,7 +103,7 @@ class Lever extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block, int $face) : bool{
-		return $block->getAdjacentSupportType($face)->hasCenterSupport();
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block, $face);
 	}
 
 	//TODO

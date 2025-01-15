@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
-use pocketmine\block\utils\SupportType;
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\item\Item;
 use pocketmine\math\Facing;
@@ -82,8 +82,6 @@ class Torch extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block, int $face) : bool{
-		return $face === Facing::DOWN ?
-			$block->getAdjacentSupportType($face)->hasCenterSupport() :
-			$block->getAdjacentSupportType($face) === SupportType::FULL;
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block, $face);
 	}
 }

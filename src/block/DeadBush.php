@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
-use pocketmine\math\Facing;
 use function mt_rand;
 
 class DeadBush extends Flowable{
@@ -51,20 +51,6 @@ class DeadBush extends Flowable{
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{
-		$supportBlock = $block->getSide(Facing::DOWN);
-		return
-			$supportBlock->hasTypeTag(BlockTypeTags::SAND) ||
-			$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-			match($supportBlock->getTypeId()){
-				//can't use DIRT tag here because it includes farmland
-				BlockTypeIds::PODZOL,
-				BlockTypeIds::MYCELIUM,
-				BlockTypeIds::DIRT,
-				BlockTypeIds::GRASS,
-				BlockTypeIds::HARDENED_CLAY,
-				BlockTypeIds::STAINED_CLAY => true,
-				//TODO: moss block
-				default => false,
-			};
+		return BlockSupportRegistry::getInstance()->isTypeSupported($this, $block);
 	}
 }
