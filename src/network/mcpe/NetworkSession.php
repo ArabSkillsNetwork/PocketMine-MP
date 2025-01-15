@@ -322,7 +322,7 @@ class NetworkSession{
 		return $this->info !== null ? $this->info->getUsername() : $this->ip . " " . $this->port;
 	}
 
-	public function getXuid(): string{
+	public function getXuid() : string{
 		return $this->xuid;
 	}
 

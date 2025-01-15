@@ -44,387 +44,388 @@ use pocketmine\block\Water;
 use pocketmine\math\Axis;
 use pocketmine\math\Facing;
 use pocketmine\utils\SingletonTrait;
+use function assert;
+use function get_class;
+use function is_array;
 
 final class BlockSupportRegistry{
-    use SingletonTrait;
+	use SingletonTrait;
 
-    public const GROUP_BAMBOO = 0;
-    public const GROUP_CAKE = 1;
-    public const GROUP_BUTTON = 2;
-    public const GROUP_CROPS = 3;
-    public const GROUP_DOOR = 4;
-    public const GROUP_FLOWER = 5;
-    public const GROUP_NETHER_ROOTS = 6;
-    public const GROUP_NETHER_VINES = 7;
-    public const GROUP_PRESSURE_PLATE = 8;
-    public const GROUP_SAPLING = 9;
-    public const GROUP_TALL_GRASS = 10;
-    public const GROUP_TORCH = 11;
+	public const GROUP_BAMBOO = 0;
+	public const GROUP_CAKE = 1;
+	public const GROUP_BUTTON = 2;
+	public const GROUP_CROPS = 3;
+	public const GROUP_DOOR = 4;
+	public const GROUP_FLOWER = 5;
+	public const GROUP_NETHER_ROOTS = 6;
+	public const GROUP_NETHER_VINES = 7;
+	public const GROUP_PRESSURE_PLATE = 8;
+	public const GROUP_SAPLING = 9;
+	public const GROUP_TALL_GRASS = 10;
+	public const GROUP_TORCH = 11;
 
-    /** @var array<int, \Closure> Mapping of block type IDs to their support handlers. */
-    private array $supportTypes = [];
-    /** @var array<int, \Closure> */
-    private array $supportTypesClosures = [];
+	/** @var array<int, \Closure> Mapping of block type IDs to their support handlers. */
+	private array $supportTypes = [];
+	/** @var array<int, \Closure> */
+	private array $supportTypesClosures = [];
 
-    public function __construct(){
-        $this->register([VanillaBlocks::AMETHYST_CLUSTER()], function (Block $blockIn, Block $block, int $facing): bool {
-            return $this->getAdjacentSupportType($block, $facing) === SupportType::FULL;
-        });
+	public function __construct(){
+		$this->register([VanillaBlocks::AMETHYST_CLUSTER()], function (Block $blockIn, Block $block, int $facing) : bool {
+			return $this->getAdjacentSupportType($block, $facing) === SupportType::FULL;
+		});
 
-        $this->register(fn(Block $b) => $b instanceof Bamboo || $b instanceof BambooSapling, function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return
-                $supportBlock->hasSameTypeId($blockIn) ||
-                $supportBlock->getTypeId() === BlockTypeIds::GRAVEL ||
-                $supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::SAND);
-        }, false, self::GROUP_BAMBOO);
+		$this->register(fn(Block $b) => $b instanceof Bamboo || $b instanceof BambooSapling, function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return
+				$supportBlock->hasSameTypeId($blockIn) ||
+				$supportBlock->getTypeId() === BlockTypeIds::GRAVEL ||
+				$supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::SAND);
+		}, false, self::GROUP_BAMBOO);
 
-        $this->register(fn(Block $b) => $b instanceof BaseCake, function (Block $block){
-            return $block->getSide(Facing::DOWN)->getTypeId() !== BlockTypeIds::AIR;
-        }, false, self::GROUP_BAMBOO);
+		$this->register(fn(Block $b) => $b instanceof BaseCake, function (Block $block){
+			return $block->getSide(Facing::DOWN)->getTypeId() !== BlockTypeIds::AIR;
+		}, false, self::GROUP_BAMBOO);
 
-        $this->register([VanillaBlocks::BED()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
-        });
-        
-        $this->register([VanillaBlocks::BELL()], function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, $face) !== SupportType::NONE;
-        });
-        
-        $this->register(fn(Block $b) => $b instanceof Button, function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, Facing::opposite($face))->hasCenterSupport();
-        }, false, self::GROUP_BUTTON);
-        
-        $this->register([VanillaBlocks::CACTUS()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            if(!$supportBlock->hasSameTypeId($blockIn) && !$supportBlock->hasTypeTag(BlockTypeTags::SAND)){
-                return false;
-            }
-            foreach(Facing::HORIZONTAL as $side){
-                if($block->getSide($side)->isSolid()){
-                    return false;
-                }
-            }
+		$this->register([VanillaBlocks::BED()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
+		});
 
-            return true;
-        });
-        
-        $this->register([VanillaBlocks::CARPET()], function (Block $blockIn, Block $block){
-            return $block->getSide(Facing::DOWN)->getTypeId() !== BlockTypeIds::AIR;
-        });
-        
-        $this->register([VanillaBlocks::CAVE_VINES()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::UP);
-            return $supportBlock->getSupportType(Facing::DOWN) === SupportType::FULL || $supportBlock->hasSameTypeId($blockIn);
-        });
-        
-        $this->register([VanillaBlocks::CHORUS_FLOWER()], function (Block $blockIn, Block $block){
-            $position = $block->getPosition();
-            $world = $position->getWorld();
-            $down = $world->getBlock($position->down());
+		$this->register([VanillaBlocks::BELL()], function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, $face) !== SupportType::NONE;
+		});
 
-            if($down->getTypeId() === BlockTypeIds::END_STONE || $down->getTypeId() === BlockTypeIds::CHORUS_PLANT){
-                return true;
-            }
+		$this->register(fn(Block $b) => $b instanceof Button, function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, Facing::opposite($face))->hasCenterSupport();
+		}, false, self::GROUP_BUTTON);
 
-            $plantAdjacent = false;
-            foreach($position->sidesAroundAxis(Axis::Y) as $sidePosition){
-                $block = $world->getBlock($sidePosition);
+		$this->register([VanillaBlocks::CACTUS()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			if(!$supportBlock->hasSameTypeId($blockIn) && !$supportBlock->hasTypeTag(BlockTypeTags::SAND)){
+				return false;
+			}
+			foreach(Facing::HORIZONTAL as $side){
+				if($block->getSide($side)->isSolid()){
+					return false;
+				}
+			}
 
-                if($block->getTypeId() === BlockTypeIds::CHORUS_PLANT){
-                    if($plantAdjacent){ //at most one plant may be horizontally adjacent
-                        return false;
-                    }
-                    $plantAdjacent = true;
-                }elseif($block->getTypeId() !== BlockTypeIds::AIR){
-                    return false;
-                }
-            }
+			return true;
+		});
 
-            return $plantAdjacent;
-        });
-        
-        $this->register([VanillaBlocks::CHORUS_PLANT()], function (Block $blockIn, Block $block){
-            $position = $block->getPosition();
-            $world = $position->getWorld();
+		$this->register([VanillaBlocks::CARPET()], function (Block $blockIn, Block $block){
+			return $block->getSide(Facing::DOWN)->getTypeId() !== BlockTypeIds::AIR;
+		});
 
-            $down = $world->getBlock($position->down());
-            $verticalAir = $down->getTypeId() === BlockTypeIds::AIR || $world->getBlock($position->up())->getTypeId() === BlockTypeIds::AIR;
+		$this->register([VanillaBlocks::CAVE_VINES()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::UP);
+			return $supportBlock->getSupportType(Facing::DOWN) === SupportType::FULL || $supportBlock->hasSameTypeId($blockIn);
+		});
 
-            // this method already exists in ChorusPlant (@see ChorusPlant->canBeSupportedBy())
-            $canBeSupportedBy = fn(Block $block) => $block->hasSameTypeId($blockIn) || $block->getTypeId() === BlockTypeIds::END_STONE;
+		$this->register([VanillaBlocks::CHORUS_FLOWER()], function (Block $blockIn, Block $block){
+			$position = $block->getPosition();
+			$world = $position->getWorld();
+			$down = $world->getBlock($position->down());
 
-            foreach($position->sidesAroundAxis(Axis::Y) as $sidePosition){
-                $block = $world->getBlock($sidePosition);
+			if($down->getTypeId() === BlockTypeIds::END_STONE || $down->getTypeId() === BlockTypeIds::CHORUS_PLANT){
+				return true;
+			}
 
-                if($block->getTypeId() === BlockTypeIds::CHORUS_PLANT){
-                    if(!$verticalAir){
-                        return false;
-                    }
+			$plantAdjacent = false;
+			foreach($position->sidesAroundAxis(Axis::Y) as $sidePosition){
+				$block = $world->getBlock($sidePosition);
 
-                    if($canBeSupportedBy($block->getSide(Facing::DOWN))){
-                        return true;
-                    }
-                }
-            }
+				if($block->getTypeId() === BlockTypeIds::CHORUS_PLANT){
+					if($plantAdjacent){ //at most one plant may be horizontally adjacent
+						return false;
+					}
+					$plantAdjacent = true;
+				}elseif($block->getTypeId() !== BlockTypeIds::AIR){
+					return false;
+				}
+			}
 
-            return $canBeSupportedBy($down);
-        });
+			return $plantAdjacent;
+		});
 
-        $this->register([VanillaBlocks::CORAL()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
-        });
+		$this->register([VanillaBlocks::CHORUS_PLANT()], function (Block $blockIn, Block $block){
+			$position = $block->getPosition();
+			$world = $position->getWorld();
 
-        $this->register(fn(Block $b) => $b instanceof Crops, function (Block $blockIn, Block $block){
-            return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
-        }, false, self::GROUP_CROPS);
+			$down = $world->getBlock($position->down());
+			$verticalAir = $down->getTypeId() === BlockTypeIds::AIR || $world->getBlock($position->up())->getTypeId() === BlockTypeIds::AIR;
 
-        $this->register([VanillaBlocks::DEAD_BUSH()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return
-                $supportBlock->hasTypeTag(BlockTypeTags::SAND) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-                match($supportBlock->getTypeId()){
-                    //can't use DIRT tag here because it includes farmland
-                    BlockTypeIds::PODZOL,
-                    BlockTypeIds::MYCELIUM,
-                    BlockTypeIds::DIRT,
-                    BlockTypeIds::GRASS,
-                    BlockTypeIds::HARDENED_CLAY,
-                    BlockTypeIds::STAINED_CLAY => true,
-                    //TODO: moss block
-                    default => false,
-                };
-        });
-        
-        $this->register(fn(Block $b) => $b instanceof Door, function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN)->hasEdgeSupport();
-        }, false, self::GROUP_DOOR);
+			// this method already exists in ChorusPlant (@see ChorusPlant->canBeSupportedBy())
+			$canBeSupportedBy = fn(Block $block) => $block->hasSameTypeId($blockIn) || $block->getTypeId() === BlockTypeIds::END_STONE;
 
-        $this->register([VanillaBlocks::CORAL_FAN()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
-        });
-        
-        $this->register(fn(Block $b) => $b instanceof Flowable, function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
-        }, false, self::GROUP_FLOWER);
-        
-        $this->register([VanillaBlocks::HANGING_ROOTS()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::UP)->hasCenterSupport(); //weird I know, but they can be placed on the bottom of fences
-        });
-        
-        $this->register([VanillaBlocks::ITEM_FRAME()], function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, $face) !== SupportType::NONE;
-        });
-        
-        $this->register([VanillaBlocks::LADDER()], function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, $face) === SupportType::FULL;
-        });
-        
-        $this->register([VanillaBlocks::LANTERN()], function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, $face)->hasCenterSupport();
-        });
+			foreach($position->sidesAroundAxis(Axis::Y) as $sidePosition){
+				$block = $world->getBlock($sidePosition);
 
-        $this->register([VanillaBlocks::LEVER()], function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, $face)->hasCenterSupport();
-        });
+				if($block->getTypeId() === BlockTypeIds::CHORUS_PLANT){
+					if(!$verticalAir){
+						return false;
+					}
 
-        $this->register(fn(Block $b) => $b instanceof NetherRoots, function (Block $blockIn, Block $block){
-            //TODO: nylium, moss
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return
-                $supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-                $supportBlock->getTypeId() === BlockTypeIds::SOUL_SOIL;
-        }, false, self::GROUP_NETHER_ROOTS);
+					if($canBeSupportedBy($block->getSide(Facing::DOWN))){
+						return true;
+					}
+				}
+			}
 
-        $this->register(fn(Block $b) => $b instanceof NetherVines, function (Block $blockIn, Block $block, int $growthFace){
-            $supportBlock = $block->getSide(Facing::opposite($growthFace));
-            return $supportBlock->getSupportType($growthFace)->hasCenterSupport() || $supportBlock->hasSameTypeId($block);
-        }, false, self::GROUP_NETHER_VINES);
+			return $canBeSupportedBy($down);
+		});
 
-        $this->register([VanillaBlocks::NETHER_WART()], function (Block $blockIn, Block $block){
-            return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::SOUL_SAND;
-        });
+		$this->register([VanillaBlocks::CORAL()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
+		});
 
-        $this->register([VanillaBlocks::PINK_PETALS()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            //TODO: Moss block
-            return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
-        });
+		$this->register(fn(Block $b) => $b instanceof Crops, function (Block $blockIn, Block $block){
+			return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
+		}, false, self::GROUP_CROPS);
 
-        $this->register([VanillaBlocks::PITCHER_CROP()], function (Block $blockIn, Block $block){
-            return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
-        });
+		$this->register([VanillaBlocks::DEAD_BUSH()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return
+				$supportBlock->hasTypeTag(BlockTypeTags::SAND) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
+				match($supportBlock->getTypeId()){
+					//can't use DIRT tag here because it includes farmland
+					BlockTypeIds::PODZOL,
+					BlockTypeIds::MYCELIUM,
+					BlockTypeIds::DIRT,
+					BlockTypeIds::GRASS,
+					BlockTypeIds::HARDENED_CLAY,
+					BlockTypeIds::STAINED_CLAY => true,
+					//TODO: moss block
+					default => false,
+				};
+		});
 
-        $this->register(fn(Block $b) => $b instanceof PressurePlate, function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
-        }, false, self::GROUP_PRESSURE_PLATE);
+		$this->register(fn(Block $b) => $b instanceof Door, function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN)->hasEdgeSupport();
+		}, false, self::GROUP_DOOR);
 
-        $this->register([VanillaBlocks::REDSTONE_COMPARATOR()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
-        });
-        
-        $this->register([VanillaBlocks::REDSTONE_REPEATER()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
-        });
-        
-        $this->register([VanillaBlocks::REDSTONE_WIRE()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
-        });
-        
-        $this->register(fn(Block $b) => $b instanceof Sapling, function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
-        }, false, self::GROUP_SAPLING);
+		$this->register([VanillaBlocks::CORAL_FAN()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
+		});
 
-        $this->register([VanillaBlocks::SNOW_LAYER()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::DOWN) === SupportType::FULL;
-        });
-        
-        $this->register([VanillaBlocks::SPORE_BLOSSOM()], function (Block $blockIn, Block $block){
-            return $this->getAdjacentSupportType($block, Facing::UP) === SupportType::FULL;
-        });
-        
-        $this->register([VanillaBlocks::SUGARCANE()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return $supportBlock->hasSameTypeId($blockIn) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::SAND);
-        });
-        
-        $this->register([VanillaBlocks::SWEET_BERRY_BUSH()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            // this method already exists in SweetBerryBush (@see SweetBerryBush->canBeSupportedBy())
-            $canBeSupportedBy = fn(Block $block) => $block->getTypeId() !== BlockTypeIds::FARMLAND && //bedrock-specific thing (bug?)
-			    ($block->hasTypeTag(BlockTypeTags::DIRT) || $block->hasTypeTag(BlockTypeTags::MUD));
-            return $canBeSupportedBy($supportBlock);
-        });
-        
-        $this->register(fn(Block $b) => $b instanceof TallGrass, function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
-        }, false, self::GROUP_TALL_GRASS);
-        
-        $this->register(fn(Block $b) => $b instanceof Torch, function (Block $blockIn, Block $block, int $face){
-            return $face === Facing::DOWN ?
-                $this->getAdjacentSupportType($block, $face)->hasCenterSupport() :
-			    $this->getAdjacentSupportType($block, $face) === SupportType::FULL;
-        }, false, self::GROUP_TORCH);
+		$this->register(fn(Block $b) => $b instanceof Flowable, function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
+		}, false, self::GROUP_FLOWER);
 
-        $this->register([VanillaBlocks::TORCHFLOWER_CROP()], function (Block $blockIn, Block $block){
-            return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
-        });
-        
-        $this->register([VanillaBlocks::WALL_CORAL_FAN()], function (Block $blockIn, Block $block, int $face){
-            return $this->getAdjacentSupportType($block, $face)->hasCenterSupport();
-        });
-        
-        $this->register([VanillaBlocks::LILY_PAD()], function (Block $blockIn, Block $block){
-            return $block->getSide(Facing::DOWN) instanceof Water;
-        });
-        
-        $this->register([VanillaBlocks::WITHER_ROSE()], function (Block $blockIn, Block $block){
-            $supportBlock = $block->getSide(Facing::DOWN);
-            return
-                $supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
-                $supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
-                match($supportBlock->getTypeId()){
-                    BlockTypeIds::NETHERRACK,
-                    BlockTypeIds::SOUL_SAND,
-                    BlockTypeIds::SOUL_SOIL => true,
-                    default => false
-                };
-        });
-    }
+		$this->register([VanillaBlocks::HANGING_ROOTS()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::UP)->hasCenterSupport(); //weird I know, but they can be placed on the bottom of fences
+		});
 
-    /**
-     * Registers a support handler for a specific block type.
-     *
-     * @param array|\Closure $blcoks The blocks to register the handler for.
-     * @param \Closure $handler The handler to determine if the block can be supported.
-     * @param bool $override Whether to override an existing handler for the block type.
-     * @param ?int $group
-     * @throws \InvalidArgumentException If the block type or group id is already registered and override is false.
-     */
-    public function register(array|\Closure $blocks, \Closure $handler, bool $override = false, ?int $group = null): void{
-        if (is_array($blocks)){
-            foreach ($blocks as $block){
-                if (!$override && isset($this->supportTypes[$block->getTypeId()])) {
-                    throw new \InvalidArgumentException("Block support type for " . get_class($block) . " is already registered");
-                }
+		$this->register([VanillaBlocks::ITEM_FRAME()], function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, $face) !== SupportType::NONE;
+		});
 
-                $this->supportTypes[$block->getTypeId()] = $handler;
-            }
-        } else {
-            assert($group === null, new \InvalidArgumentException("Group ID must not be null"));
+		$this->register([VanillaBlocks::LADDER()], function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, $face) === SupportType::FULL;
+		});
 
-            if (!$override && isset($this->supportTypesClosures[$group])) {
-                throw new \InvalidArgumentException("Block support type for the group with id {$group} is already registered");
-            }
+		$this->register([VanillaBlocks::LANTERN()], function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, $face)->hasCenterSupport();
+		});
 
-            $this->supportTypesClosures[$group] = $handler;
-        }
-    }
+		$this->register([VanillaBlocks::LEVER()], function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, $face)->hasCenterSupport();
+		});
 
-    /**
-     * Unregisters the support handler for a specific block type.
-     *
-     * @param Block $block The block to unregister the handler for.
-     */
-    public function unregister(Block $block): void{
-        if (isset($this->supportTypes[$block->getTypeId()])) {
-            unset($this->supportTypes[$block->getTypeId()]);
-        }
-    }
+		$this->register(fn(Block $b) => $b instanceof NetherRoots, function (Block $blockIn, Block $block){
+			//TODO: nylium, moss
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return
+				$supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
+				$supportBlock->getTypeId() === BlockTypeIds::SOUL_SOIL;
+		}, false, self::GROUP_NETHER_ROOTS);
 
-    /**
-     * Checks if a block type is supported based on its registered handler.
-     *
-     * @param Block $block The block to check.
-     * @param mixed ...$args Additional arguments to pass to the handler.
-     * @return bool Whether the block type is supported.
-     */
-    public function isTypeSupported(Block $block, ...$args): bool{
-        if (isset($this->supportTypes[$block->getTypeId()])) {
-            return $this->supportTypes[$block->getTypeId()]($block, ...$args);
-        }
+		$this->register(fn(Block $b) => $b instanceof NetherVines, function (Block $blockIn, Block $block, int $growthFace){
+			$supportBlock = $block->getSide(Facing::opposite($growthFace));
+			return $supportBlock->getSupportType($growthFace)->hasCenterSupport() || $supportBlock->hasSameTypeId($block);
+		}, false, self::GROUP_NETHER_VINES);
 
-        if (isset($this->supportTypesClosures[($group = self::getBlockGroup($block))])){
-            return $this->supportTypesClosures[$group]($block);
-        }
+		$this->register([VanillaBlocks::NETHER_WART()], function (Block $blockIn, Block $block){
+			return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::SOUL_SAND;
+		});
 
-        return false;
-    }
+		$this->register([VanillaBlocks::PINK_PETALS()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			//TODO: Moss block
+			return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
+		});
 
-    /**
-     * Gets the support type of the adjacent block in the specified facing direction.
-     *
-     * This method is copied from {@see Block->getAdjacentSupportType()} because the original method is protected 
-     * and cannot be used in closures.
-     *
-     * @param Block $block The block to check.
-     * @param int $facing The facing direction to check.
-     * @return SupportType The support type of the adjacent block.
-     * @see Block->getAdjacentSupportType()
-     */
-    private function getAdjacentSupportType(Block $block, int $facing): SupportType {
-        return $block->getSide($facing)->getSupportType(Facing::opposite($facing));
-    }
+		$this->register([VanillaBlocks::PITCHER_CROP()], function (Block $blockIn, Block $block){
+			return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
+		});
 
-    public static function getBlockGroup(Block $block): int
-    {
-        return match (true){
-            $block instanceof Bamboo => self::GROUP_BAMBOO,
-            $block instanceof BaseCake => self::GROUP_CAKE,
-            $block instanceof Button => self::GROUP_BUTTON,
-            $block instanceof Crops => self::GROUP_CROPS,
-            $block instanceof Door => self::GROUP_DOOR,
-            $block instanceof Flowable => self::GROUP_FLOWER,
-            default => -1
-        };
-    }
+		$this->register(fn(Block $b) => $b instanceof PressurePlate, function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
+		}, false, self::GROUP_PRESSURE_PLATE);
+
+		$this->register([VanillaBlocks::REDSTONE_COMPARATOR()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
+		});
+
+		$this->register([VanillaBlocks::REDSTONE_REPEATER()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN) !== SupportType::NONE;
+		});
+
+		$this->register([VanillaBlocks::REDSTONE_WIRE()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN)->hasCenterSupport();
+		});
+
+		$this->register(fn(Block $b) => $b instanceof Sapling, function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
+		}, false, self::GROUP_SAPLING);
+
+		$this->register([VanillaBlocks::SNOW_LAYER()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::DOWN) === SupportType::FULL;
+		});
+
+		$this->register([VanillaBlocks::SPORE_BLOSSOM()], function (Block $blockIn, Block $block){
+			return $this->getAdjacentSupportType($block, Facing::UP) === SupportType::FULL;
+		});
+
+		$this->register([VanillaBlocks::SUGARCANE()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return $supportBlock->hasSameTypeId($blockIn) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::SAND);
+		});
+
+		$this->register([VanillaBlocks::SWEET_BERRY_BUSH()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			// this method already exists in SweetBerryBush (@see SweetBerryBush->canBeSupportedBy())
+			$canBeSupportedBy = fn(Block $block) => $block->getTypeId() !== BlockTypeIds::FARMLAND && //bedrock-specific thing (bug?)
+				($block->hasTypeTag(BlockTypeTags::DIRT) || $block->hasTypeTag(BlockTypeTags::MUD));
+			return $canBeSupportedBy($supportBlock);
+		});
+
+		$this->register(fn(Block $b) => $b instanceof TallGrass, function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return $supportBlock->hasTypeTag(BlockTypeTags::DIRT) || $supportBlock->hasTypeTag(BlockTypeTags::MUD);
+		}, false, self::GROUP_TALL_GRASS);
+
+		$this->register(fn(Block $b) => $b instanceof Torch, function (Block $blockIn, Block $block, int $face){
+			return $face === Facing::DOWN ?
+				$this->getAdjacentSupportType($block, $face)->hasCenterSupport() :
+				$this->getAdjacentSupportType($block, $face) === SupportType::FULL;
+		}, false, self::GROUP_TORCH);
+
+		$this->register([VanillaBlocks::TORCHFLOWER_CROP()], function (Block $blockIn, Block $block){
+			return $block->getSide(Facing::DOWN)->getTypeId() === BlockTypeIds::FARMLAND;
+		});
+
+		$this->register([VanillaBlocks::WALL_CORAL_FAN()], function (Block $blockIn, Block $block, int $face){
+			return $this->getAdjacentSupportType($block, $face)->hasCenterSupport();
+		});
+
+		$this->register([VanillaBlocks::LILY_PAD()], function (Block $blockIn, Block $block){
+			return $block->getSide(Facing::DOWN) instanceof Water;
+		});
+
+		$this->register([VanillaBlocks::WITHER_ROSE()], function (Block $blockIn, Block $block){
+			$supportBlock = $block->getSide(Facing::DOWN);
+			return
+				$supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
+				match($supportBlock->getTypeId()){
+					BlockTypeIds::NETHERRACK,
+					BlockTypeIds::SOUL_SAND,
+					BlockTypeIds::SOUL_SOIL => true,
+					default => false
+				};
+		});
+	}
+
+	/**
+	 * Registers a support handler for a specific block type.
+	 *
+	 * @param \Closure $handler  The handler to determine if the block can be supported.
+	 * @param bool     $override Whether to override an existing handler for the block type.
+	 * @throws \InvalidArgumentException If the block type or group id is already registered and override is false.
+	 */
+	public function register(array|\Closure $blocks, \Closure $handler, bool $override = false, ?int $group = null) : void{
+		if (is_array($blocks)){
+			foreach ($blocks as $block){
+				if (!$override && isset($this->supportTypes[$block->getTypeId()])) {
+					throw new \InvalidArgumentException("Block support type for " . get_class($block) . " is already registered");
+				}
+
+				$this->supportTypes[$block->getTypeId()] = $handler;
+			}
+		} else {
+			assert($group === null, new \InvalidArgumentException("Group ID must not be null"));
+
+			if (!$override && isset($this->supportTypesClosures[$group])) {
+				throw new \InvalidArgumentException("Block support type for the group with id {$group} is already registered");
+			}
+
+			$this->supportTypesClosures[$group] = $handler;
+		}
+	}
+
+	/**
+	 * Unregisters the support handler for a specific block type.
+	 *
+	 * @param Block $block The block to unregister the handler for.
+	 */
+	public function unregister(Block $block) : void{
+		if (isset($this->supportTypes[$block->getTypeId()])) {
+			unset($this->supportTypes[$block->getTypeId()]);
+		}
+	}
+
+	/**
+	 * Checks if a block type is supported based on its registered handler.
+	 *
+	 * @param Block $block   The block to check.
+	 * @param mixed ...$args Additional arguments to pass to the handler.
+	 * @return bool Whether the block type is supported.
+	 */
+	public function isTypeSupported(Block $block, ...$args) : bool{
+		if (isset($this->supportTypes[$block->getTypeId()])) {
+			return $this->supportTypes[$block->getTypeId()]($block, ...$args);
+		}
+
+		if (isset($this->supportTypesClosures[($group = self::getBlockGroup($block))])){
+			return $this->supportTypesClosures[$group]($block);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets the support type of the adjacent block in the specified facing direction.
+	 *
+	 * This method is copied from {@see Block->getAdjacentSupportType()} because the original method is protected
+	 * and cannot be used in closures.
+	 *
+	 * @param Block $block  The block to check.
+	 * @param int   $facing The facing direction to check.
+	 * @return SupportType The support type of the adjacent block.
+	 * @see Block->getAdjacentSupportType()
+	 */
+	private function getAdjacentSupportType(Block $block, int $facing) : SupportType {
+		return $block->getSide($facing)->getSupportType(Facing::opposite($facing));
+	}
+
+	public static function getBlockGroup(Block $block) : int
+	{
+		return match (true){
+			$block instanceof Bamboo => self::GROUP_BAMBOO,
+			$block instanceof BaseCake => self::GROUP_CAKE,
+			$block instanceof Button => self::GROUP_BUTTON,
+			$block instanceof Crops => self::GROUP_CROPS,
+			$block instanceof Door => self::GROUP_DOOR,
+			$block instanceof Flowable => self::GROUP_FLOWER,
+			default => -1
+		};
+	}
 }

@@ -605,9 +605,9 @@ abstract class Living extends Entity{
 		} else {
 			if($this->attackTime <= 0){
 				//this logic only applies if the entity was cold attacked
-	
+
 				$this->attackTime = $source->getAttackCooldown();
-	
+
 				if($source instanceof EntityDamageByChildEntityEvent){
 					$e = $source->getChild();
 					if($e !== null){
@@ -622,12 +622,12 @@ abstract class Living extends Entity{
 						$this->knockBack($deltaX, $deltaZ, $source->getKnockBack(), $source->getVerticalKnockBackLimit());
 					}
 				}
-	
+
 				if($this->isAlive()){
 					$this->doHitAnimation();
 				}
 			}
-	
+
 			if($this->isAlive()){
 				$this->applyPostDamageEffects($source);
 			}
