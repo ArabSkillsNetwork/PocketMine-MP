@@ -349,7 +349,6 @@ final class BlockSupportRegistry{
 	 *
 	 * @param \Closure $handler  The handler to determine if the block can be supported.
 	 * @param bool     $override Whether to override an existing handler for the block type.
-	 * @param ?int     $group
 	 * @throws \InvalidArgumentException If the block type or group id is already registered and override is false.
 	 */
 	public function register(array|\Closure $blocks, \Closure $handler, bool $override = false, ?int $group = null) : void{
@@ -426,12 +425,12 @@ final class BlockSupportRegistry{
 			$block instanceof Crops => self::GROUP_CROPS,
 			$block instanceof Door => self::GROUP_DOOR,
 			$block instanceof Flowable => self::GROUP_FLOWER,
-            $block instanceof NetherRoots => self::GROUP_NETHER_ROOTS,
-            $block instanceof NetherVines => self::GROUP_NETHER_VINES,
-            $block instanceof PressurePlate => self::GROUP_PRESSURE_PLATE,
-            $block instanceof Sapling => self::GROUP_SAPLING,
-            $block instanceof TallGrass => self::GROUP_TALL_GRASS,
-            $block instanceof Torch => self::GROUP_TORCH,
+			$block instanceof NetherRoots => self::GROUP_NETHER_ROOTS,
+			$block instanceof NetherVines => self::GROUP_NETHER_VINES,
+			$block instanceof PressurePlate => self::GROUP_PRESSURE_PLATE,
+			$block instanceof Sapling => self::GROUP_SAPLING,
+			$block instanceof TallGrass => self::GROUP_TALL_GRASS,
+			$block instanceof Torch => self::GROUP_TORCH,
 			default => -1
 		};
 	}
