@@ -37,9 +37,6 @@ class Carpet extends Flowable{
 		return true;
 	}
 
-	/**
-	 * @return AxisAlignedBB[]
-	 */
 	protected function recalculateCollisionBoxes() : array{
 		return [AxisAlignedBB::one()->trim(Facing::UP, 15 / 16)];
 	}
