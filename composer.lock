@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5328e88551066fab659784ace7f2131e",
+    "content-hash": "158b35a6cb2d684f9c510d5f86abbedc",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -178,16 +178,16 @@
         },
         {
             "name": "pocketmine/bedrock-block-upgrade-schema",
-            "version": "5.0.0",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockBlockUpgradeSchema.git",
-                "reference": "20dd5c11e9915bacea4fe2cf649e1d23697a6e52"
+                "reference": "2218512e4b91f5bfd09ef55f7a4c4b04e169e41a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockBlockUpgradeSchema/zipball/20dd5c11e9915bacea4fe2cf649e1d23697a6e52",
-                "reference": "20dd5c11e9915bacea4fe2cf649e1d23697a6e52",
+                "url": "https://api.github.com/repos/pmmp/BedrockBlockUpgradeSchema/zipball/2218512e4b91f5bfd09ef55f7a4c4b04e169e41a",
+                "reference": "2218512e4b91f5bfd09ef55f7a4c4b04e169e41a",
                 "shasum": ""
             },
             "type": "library",
@@ -198,22 +198,22 @@
             "description": "Schemas describing how to upgrade saved block data in older Minecraft: Bedrock Edition world saves",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockBlockUpgradeSchema/issues",
-                "source": "https://github.com/pmmp/BedrockBlockUpgradeSchema/tree/5.0.0"
+                "source": "https://github.com/pmmp/BedrockBlockUpgradeSchema/tree/5.1.0"
             },
-            "time": "2024-11-03T14:13:50+00:00"
+            "time": "2025-02-11T17:41:44+00:00"
         },
         {
             "name": "pocketmine/bedrock-data",
-            "version": "2.15.0+bedrock-1.21.50",
+            "version": "4.0.0+bedrock-1.21.60",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockData.git",
-                "reference": "6e819f36d781866ce63d2406be2ce7f2d1afd9ad"
+                "reference": "2e5f16ec2facac653f3f894f22eb831d880ba98e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/6e819f36d781866ce63d2406be2ce7f2d1afd9ad",
-                "reference": "6e819f36d781866ce63d2406be2ce7f2d1afd9ad",
+                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/2e5f16ec2facac653f3f894f22eb831d880ba98e",
+                "reference": "2e5f16ec2facac653f3f894f22eb831d880ba98e",
                 "shasum": ""
             },
             "type": "library",
@@ -224,9 +224,9 @@
             "description": "Blobs of data generated from Minecraft: Bedrock Edition, used by PocketMine-MP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockData/issues",
-                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.21.50"
+                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.21.60"
             },
-            "time": "2024-12-04T12:59:12+00:00"
+            "time": "2025-02-16T15:56:56+00:00"
         },
         {
             "name": "pocketmine/bedrock-item-upgrade-schema",
@@ -260,12 +260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "44fef39cd9d78f0d8a408e7d798d5eb9fab0f135"
+                "reference": "474444d43f08ce2f21a787bcac52c4693bcbb563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/44fef39cd9d78f0d8a408e7d798d5eb9fab0f135",
-                "reference": "44fef39cd9d78f0d8a408e7d798d5eb9fab0f135",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/474444d43f08ce2f21a787bcac52c4693bcbb563",
+                "reference": "474444d43f08ce2f21a787bcac52c4693bcbb563",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2025-01-14T19:46:17+00:00"
+            "time": "2025-02-16T23:13:22+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -480,16 +480,16 @@
         },
         {
             "name": "pocketmine/locale-data",
-            "version": "2.22.1",
+            "version": "2.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/Language.git",
-                "reference": "fa4e377c437391cfcfdedd08eea3a848eabd1b49"
+                "reference": "6ec5e92c77a2102b2692763733e4763012facae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/Language/zipball/fa4e377c437391cfcfdedd08eea3a848eabd1b49",
-                "reference": "fa4e377c437391cfcfdedd08eea3a848eabd1b49",
+                "url": "https://api.github.com/repos/pmmp/Language/zipball/6ec5e92c77a2102b2692763733e4763012facae9",
+                "reference": "6ec5e92c77a2102b2692763733e4763012facae9",
                 "shasum": ""
             },
             "type": "library",
@@ -497,9 +497,9 @@
             "description": "Language resources used by PocketMine-MP",
             "support": {
                 "issues": "https://github.com/pmmp/Language/issues",
-                "source": "https://github.com/pmmp/Language/tree/2.22.1"
+                "source": "https://github.com/pmmp/Language/tree/2.24.0"
             },
-            "time": "2024-12-06T14:44:17+00:00"
+            "time": "2025-02-16T20:46:34+00:00"
         },
         {
             "name": "pocketmine/log",
@@ -1159,16 +1159,16 @@
     "packages-dev": [
         {
             "name": "myclabs/deep-copy",
-            "version": "1.12.1",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845"
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/123267b2c49fbf30d78a7b2d333f6be754b94845",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/024473a478be9df5fdaca2c793f2232fe788e414",
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414",
                 "shasum": ""
             },
             "require": {
@@ -1207,7 +1207,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.1"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.0"
             },
             "funding": [
                 {
@@ -1215,7 +1215,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-08T17:47:46+00:00"
+            "time": "2025-02-12T12:17:51+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -1395,16 +1395,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.2",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "7d08f569e582ade182a375c366cbd896eccadd3a"
+                "reference": "8f99e18eb775dbaf6460c95fa0b65312da9c746a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7d08f569e582ade182a375c366cbd896eccadd3a",
-                "reference": "7d08f569e582ade182a375c366cbd896eccadd3a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8f99e18eb775dbaf6460c95fa0b65312da9c746a",
+                "reference": "8f99e18eb775dbaf6460c95fa0b65312da9c746a",
                 "shasum": ""
             },
             "require": {
@@ -1449,7 +1449,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-21T14:54:06+00:00"
+            "time": "2025-02-10T08:25:21+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -1873,16 +1873,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.44",
+            "version": "10.5.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1381c62769be4bb88fa4c5aec1366c7c66ca4f36"
+                "reference": "bd68a781d8e30348bc297449f5234b3458267ae8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1381c62769be4bb88fa4c5aec1366c7c66ca4f36",
-                "reference": "1381c62769be4bb88fa4c5aec1366c7c66ca4f36",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bd68a781d8e30348bc297449f5234b3458267ae8",
+                "reference": "bd68a781d8e30348bc297449f5234b3458267ae8",
                 "shasum": ""
             },
             "require": {
@@ -1954,7 +1954,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.44"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.45"
             },
             "funding": [
                 {
@@ -1970,7 +1970,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-31T07:00:38+00:00"
+            "time": "2025-02-06T16:08:12+00:00"
         },
         {
             "name": "sebastian/cli-parser",
