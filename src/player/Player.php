@@ -325,7 +325,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 		$this->locale = $this->playerInfo->getLocale();
 
 		$this->uuid = $this->playerInfo->getUuid();
-		$this->xuid = $this->playerInfo instanceof XboxLivePlayerInfo ? $this->playerInfo->getXuid() : "";
+		$this->xuid = $this->playerInfo instanceof XboxLivePlayerInfo ? $this->playerInfo->getXuid() : $session->getXuid();
 
 		$this->creativeInventory = CreativeInventory::getInstance();
 
