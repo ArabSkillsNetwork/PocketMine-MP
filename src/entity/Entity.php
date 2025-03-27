@@ -1494,13 +1494,8 @@ abstract class Entity{
 		$player->getNetworkSession()->sendDataPacket(AddActorPacket::create(
 			$this->getId(), //TODO: actor unique ID
 			$this->getId(),
-<<<<<<< HEAD
 			$this->getNetworkTypeId(),
-			$this->location->asVector3(),
-=======
-			static::getNetworkTypeId(),
 			$this->getOffsetPosition($this->location->asVector3()),
->>>>>>> upstream/stable
 			$this->getMotion(),
 			$this->location->pitch,
 			$this->location->yaw,
