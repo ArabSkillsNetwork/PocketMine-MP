@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ab6dba88271b32357ee92b06963dc87",
+    "content-hash": "fa2398325d9bfc45e7779050f6de4c9a",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -260,12 +260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "fc3d2fc786bcc9af37197bea929a07cfa860bb1f"
+                "reference": "bdf62ae8e260ad39ca41c3edc81f16edeaadc671"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/fc3d2fc786bcc9af37197bea929a07cfa860bb1f",
-                "reference": "fc3d2fc786bcc9af37197bea929a07cfa860bb1f",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/bdf62ae8e260ad39ca41c3edc81f16edeaadc671",
+                "reference": "bdf62ae8e260ad39ca41c3edc81f16edeaadc671",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2025-03-25T18:57:30+00:00"
+            "time": "2025-03-27T16:40:16+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -1440,16 +1440,16 @@
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "4d2b44bdba358f0a1990247f8b59f6c31185e600"
+                "reference": "6b92469f8a7995e626da3aa487099617b8dfa260"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/4d2b44bdba358f0a1990247f8b59f6c31185e600",
-                "reference": "4d2b44bdba358f0a1990247f8b59f6c31185e600",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/6b92469f8a7995e626da3aa487099617b8dfa260",
+                "reference": "6b92469f8a7995e626da3aa487099617b8dfa260",
                 "shasum": ""
             },
             "require": {
@@ -1487,9 +1487,9 @@
             "description": "PHPUnit extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.5"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.6"
             },
-            "time": "2025-03-24T14:21:04+00:00"
+            "time": "2025-03-26T12:47:06+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -2967,5 +2967,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
