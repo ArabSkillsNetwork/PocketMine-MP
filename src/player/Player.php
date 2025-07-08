@@ -682,7 +682,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 	public function setDisplayName(string $name) : void{
 		$ev = new PlayerDisplayNameChangeEvent($this, $this->displayName, $name);
 		$ev->call();
- 
+
 		$this->displayName = $ev->getNewName();
 	}
 
