@@ -44,6 +44,8 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\timings\Timings;
+use pocketmine\utils\ObjectSet;
+
 use function atan2;
 use function ceil;
 use function count;
@@ -61,11 +63,31 @@ abstract class Projectile extends Entity{
 	protected float $damage = 0.0;
 	protected ?Vector3 $blockHit = null;
 
+	/** @var \Closure[]|ObjectSet */
+	protected ObjectSet $entityBaseTickListeners;
+
 	public function __construct(Location $location, ?Entity $shootingEntity, ?CompoundTag $nbt = null){
+		$this->entityBaseTickListeners = new ObjectSet();
 		parent::__construct($location, $nbt);
 		if($shootingEntity !== null){
 			$this->setOwningEntity($shootingEntity);
 		}
+	}
+
+	public function getBaseTickListeners(): ObjectSet{
+		return $this->entityBaseTickListeners;
+	}
+
+	protected function entityBaseTick(int $tickDiff = 1) : bool{
+		if ($this->closed){
+			return false;
+		}
+
+		foreach($this->entityBaseTickListeners as $closure){
+			($closure)($this, $tickDiff);
+		}
+
+		return parent::entityBaseTick($tickDiff);
 	}
 
 	public function attack(EntityDamageEvent $source) : void{
