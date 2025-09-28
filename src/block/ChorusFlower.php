@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\Ageable;
 use pocketmine\block\utils\AgeableTrait;
 use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
@@ -41,7 +42,7 @@ use function array_rand;
 use function min;
 use function mt_rand;
 
-final class ChorusFlower extends Flowable{
+final class ChorusFlower extends Flowable implements Ageable{
 	use AgeableTrait;
 	use StaticSupportTrait;
 
