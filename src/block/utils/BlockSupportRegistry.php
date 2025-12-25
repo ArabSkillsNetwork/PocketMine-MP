@@ -235,11 +235,12 @@ final class BlockSupportRegistry{
 		});
 
 		$this->register(fn(Block $b) => $b instanceof NetherRoots, function (Block $blockIn, Block $block){
-			//TODO: nylium, moss
+			//TODO: moss
 			$supportBlock = $block->getSide(Facing::DOWN);
 			return
 				$supportBlock->hasTypeTag(BlockTypeTags::DIRT) ||
 				$supportBlock->hasTypeTag(BlockTypeTags::MUD) ||
+				$supportBlock->hasTypeTag(BlockTypeTags::NYLIUM) ||
 				$supportBlock->getTypeId() === BlockTypeIds::SOUL_SOIL;
 		}, false, self::GROUP_NETHER_ROOTS);
 
