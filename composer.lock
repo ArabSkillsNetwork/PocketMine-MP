@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fa4ec13d985e8014059125e9a5a49d2",
+    "content-hash": "5a18608e000b52ee9633c918eba8c372",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -260,12 +260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "dc3979fffaad57c46bba779b22884a9bc4cdc595"
+                "reference": "1d0fbec6c882d61fbdc7392abcc7c1aa098e6556"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/dc3979fffaad57c46bba779b22884a9bc4cdc595",
-                "reference": "dc3979fffaad57c46bba779b22884a9bc4cdc595",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/1d0fbec6c882d61fbdc7392abcc7c1aa098e6556",
+                "reference": "1d0fbec6c882d61fbdc7392abcc7c1aa098e6556",
                 "shasum": ""
             },
             "require": {
@@ -308,7 +308,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2026-03-26T09:03:09+00:00"
+            "time": "2026-05-11T21:22:41+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -884,16 +884,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v6.4.34",
+            "version": "v6.4.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "01ffe0411b842f93c571e5c391f289c3fdd498c3"
+                "reference": "29f792d7dc30cc670fc4cdd50d7c6653d067ce7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/01ffe0411b842f93c571e5c391f289c3fdd498c3",
-                "reference": "01ffe0411b842f93c571e5c391f289c3fdd498c3",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/29f792d7dc30cc670fc4cdd50d7c6653d067ce7b",
+                "reference": "29f792d7dc30cc670fc4cdd50d7c6653d067ce7b",
                 "shasum": ""
             },
             "require": {
@@ -930,7 +930,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v6.4.34"
+                "source": "https://github.com/symfony/filesystem/tree/v6.4.37"
             },
             "funding": [
                 {
@@ -950,7 +950,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-24T17:51:06+00:00"
+            "time": "2026-04-13T15:27:04+00:00"
         }
     ],
     "packages-dev": [
