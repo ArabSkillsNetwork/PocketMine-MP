@@ -71,6 +71,10 @@ class PreSpawnPacketHandler extends PacketHandler{
 
 			$typeConverter = $this->session->getTypeConverter();
 
+			$this->session->getLogger()->debug("Sending voxel shapes");
+			//the client resolves block shapes against this registry, so it has to arrive before StartGamePacket
+			$this->session->sendDataPacket(StaticPacketCache::getInstance()->getVoxelShapes());
+
 			$this->session->getLogger()->debug("Preparing StartGamePacket");
 			$levelSettings = new LevelSettings();
 			$levelSettings->seed = -1;
@@ -113,7 +117,6 @@ class PreSpawnPacketHandler extends PacketHandler{
 				false,
 				false,
 				new NetworkPermissions(disableClientSounds: true),
-				true,
 				null,
 				new ServerTelemetryData("", "", "", ""),
 				[],

@@ -73,7 +73,7 @@ abstract class Projectile extends Entity{
 		}
 	}
 
-	public function getBaseTickListeners(): ObjectSet{
+	public function getBaseTickListeners() : ObjectSet{
 		return $this->entityBaseTickListeners;
 	}
 

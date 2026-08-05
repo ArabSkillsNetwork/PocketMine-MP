@@ -50,4 +50,5 @@ final class BedrockDataFiles{
 	public const R16_TO_CURRENT_ITEM_MAP_JSON = BEDROCK_DATA_PATH . '/r16_to_current_item_map.json';
 	public const RECIPES = BEDROCK_DATA_PATH . '/recipes';
 	public const REQUIRED_ITEM_LIST_JSON = BEDROCK_DATA_PATH . '/required_item_list.json';
+	public const VOXEL_SHAPES_BIN = BEDROCK_DATA_PATH . '/voxel_shapes.bin';
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  *
  *  ____            _        _   __  __ _                  __  __ ____

@@ -263,7 +263,6 @@ class InGamePacketHandler extends PacketHandler{
 				$packetHandled = false;
 				$this->session->getLogger()->debug("Unhandled transaction in PlayerAuthInputPacket (type " . $useItemTransaction->getTransactionData()->getActionType() . ")");
 			}else{
-				echo "> AuthInput: doing syncMismatchedPredictedSlotChanges cuz unable to handle the transaction" . PHP_EOL;
 				$this->inventoryManager->syncMismatchedPredictedSlotChanges();
 			}
 			$this->inventoryManager->setCurrentItemStackRequestId(null);
@@ -456,8 +455,6 @@ class InGamePacketHandler extends PacketHandler{
 	}
 
 	private function handleUseItemTransaction(UseItemTransactionData $data) : bool{
-		echo "> AuthInput: data: " . PHP_EOL;
-		var_dump($data);
 		$this->player->selectHotbarSlot($data->getHotbarSlot());
 
 		switch($data->getActionType()){
@@ -515,8 +512,6 @@ class InGamePacketHandler extends PacketHandler{
 				$this->player->useHeldItem();
 				return true;
 		}
-
-		echo "> AuthInput: default false just retruned!" . PHP_EOL;
 
 		return false;
 	}
@@ -721,11 +716,8 @@ class InGamePacketHandler extends PacketHandler{
 				break;
 			case PlayerAction::PREDICT_DESTROY_BLOCK:
 				self::validateFacing($face);
-				var_dump("PlayerAction::PREDICT_DESTROY_BLOCK", "FACE: " . $face, "POS: " . (string)$pos);
 				if(!$this->player->breakBlock($pos)){
 					$this->syncBlocksNearby($pos, $face);
-				} else {
-					var_dump("UNABLE TO PREDICT_DESTROY_BLOCK");
 				}
 				$this->lastBlockAttacked = null;
 				break;

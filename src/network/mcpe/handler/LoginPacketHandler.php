@@ -145,7 +145,9 @@ class LoginPacketHandler extends PacketHandler{
 		}
 
 		$clientData = $this->parseClientData($packet->clientDataJwt);
-		$xuid = $clientData->Waterdog_XUID;
+		if($clientData->Waterdog_XUID !== null){
+			$xuid = $clientData->Waterdog_XUID;
+		}
 
 		try{
 			$skin = $this->session->getTypeConverter()->getSkinAdapter()->fromSkinData(ClientDataToSkinDataHelper::fromClientData($clientData));
@@ -159,8 +161,12 @@ class LoginPacketHandler extends PacketHandler{
 		}
 
 		(function () use ($clientData){
-			$this->ip = $clientData->Waterdog_IP;
-			$this->xuid = $clientData->Waterdog_XUID;
+			if($clientData->Waterdog_IP !== null){
+				$this->ip = $clientData->Waterdog_IP;
+			}
+			if($clientData->Waterdog_XUID !== null){
+				$this->xuid = $clientData->Waterdog_XUID;
+			}
 		})->call($this->session);
 
 		if($xuid !== ""){

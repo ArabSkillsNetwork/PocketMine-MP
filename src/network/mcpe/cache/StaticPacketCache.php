@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\cache;
 
+use pmmp\encoding\ByteBufferReader;
 use pocketmine\color\Color;
 use pocketmine\data\bedrock\BedrockDataFiles;
 use pocketmine\data\SavedDataLoadingException;
@@ -31,6 +32,7 @@ use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\types\biome\BiomeDefinitionEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
+use pocketmine\network\mcpe\protocol\VoxelShapesPacket;
 use pocketmine\utils\Filesystem;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\utils\Utils;
@@ -48,6 +50,12 @@ class StaticPacketCache{
 	 */
 	private static function loadCompoundFromFile(string $filePath) : CacheableNbt{
 		return new CacheableNbt((new NetworkNbtSerializer())->read(Filesystem::fileGetContents($filePath))->mustGetCompoundTag());
+	}
+
+	private static function loadVoxelShapes(string $filePath) : VoxelShapesPacket{
+		$packet = new VoxelShapesPacket();
+		$packet->decode(new ByteBufferReader(Filesystem::fileGetContents($filePath)));
+		return $packet;
 	}
 
 	/**
@@ -102,13 +110,15 @@ class StaticPacketCache{
 	private static function make() : self{
 		return new self(
 			BiomeDefinitionListPacket::fromDefinitions(self::loadBiomeDefinitionModel(BedrockDataFiles::BIOME_DEFINITIONS_JSON)),
-			AvailableActorIdentifiersPacket::create(self::loadCompoundFromFile(BedrockDataFiles::ENTITY_IDENTIFIERS_NBT))
+			AvailableActorIdentifiersPacket::create(self::loadCompoundFromFile(BedrockDataFiles::ENTITY_IDENTIFIERS_NBT)),
+			self::loadVoxelShapes(BedrockDataFiles::VOXEL_SHAPES_BIN)
 		);
 	}
 
 	public function __construct(
 		private BiomeDefinitionListPacket $biomeDefs,
-		private AvailableActorIdentifiersPacket $availableActorIdentifiers
+		private AvailableActorIdentifiersPacket $availableActorIdentifiers,
+		private VoxelShapesPacket $voxelShapes
 	){}
 
 	public function getBiomeDefs() : BiomeDefinitionListPacket{
@@ -117,5 +127,9 @@ class StaticPacketCache{
 
 	public function getAvailableActorIdentifiers() : AvailableActorIdentifiersPacket{
 		return $this->availableActorIdentifiers;
+	}
+
+	public function getVoxelShapes() : VoxelShapesPacket{
+		return $this->voxelShapes;
 	}
 }
