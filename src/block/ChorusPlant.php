@@ -28,6 +28,7 @@ use pocketmine\block\utils\StaticSupportTrait;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\math\AxisAlignedBB;
+use pocketmine\math\Facing;
 use function mt_rand;
 
 final class ChorusPlant extends Flowable{
@@ -68,10 +69,6 @@ final class ChorusPlant extends Flowable{
 		}
 
 		return $this;
-	}
-
-	private function canBeSupportedBy(Block $block) : bool{
-		return $block->hasSameTypeId($this) || $block->getTypeId() === BlockTypeIds::END_STONE;
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{

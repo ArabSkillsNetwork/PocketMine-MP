@@ -62,7 +62,10 @@ abstract class Projectile extends Entity{
 	protected float $damage = 0.0;
 	protected ?Vector3 $blockHit = null;
 
-	/** @var \Closure[]|ObjectSet */
+	/**
+	 * @var \Closure[]|ObjectSet
+	 * @phpstan-var ObjectSet<\Closure(Projectile, int) : void>
+	 */
 	protected ObjectSet $entityBaseTickListeners;
 
 	public function __construct(Location $location, ?Entity $shootingEntity, ?CompoundTag $nbt = null){
@@ -73,6 +76,10 @@ abstract class Projectile extends Entity{
 		}
 	}
 
+	/**
+	 * @return \Closure[]|ObjectSet
+	 * @phpstan-return ObjectSet<\Closure(Projectile, int) : void>
+	 */
 	public function getBaseTickListeners() : ObjectSet{
 		return $this->entityBaseTickListeners;
 	}

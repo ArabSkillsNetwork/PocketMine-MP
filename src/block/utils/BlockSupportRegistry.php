@@ -44,7 +44,6 @@ use pocketmine\block\Water;
 use pocketmine\math\Axis;
 use pocketmine\math\Facing;
 use pocketmine\utils\SingletonTrait;
-use function assert;
 use function get_class;
 use function is_array;
 
@@ -64,9 +63,15 @@ final class BlockSupportRegistry{
 	public const GROUP_TALL_GRASS = 10;
 	public const GROUP_TORCH = 11;
 
-	/** @var array<int, \Closure> Mapping of block type IDs to their support handlers. */
+	/**
+	 * @var array<int, \Closure> Mapping of block type IDs to their support handlers.
+	 * @phpstan-var array<int, \Closure(Block, Block, int) : bool>
+	 */
 	private array $supportTypes = [];
-	/** @var array<int, \Closure> */
+	/**
+	 * @var array<int, \Closure>
+	 * @phpstan-var array<int, \Closure(Block, Block, int) : bool>
+	 */
 	private array $supportTypesClosures = [];
 
 	public function __construct(){
@@ -348,9 +353,13 @@ final class BlockSupportRegistry{
 	/**
 	 * Registers a support handler for a specific block type.
 	 *
-	 * @param \Closure $handler  The handler to determine if the block can be supported.
-	 * @param bool     $override Whether to override an existing handler for the block type.
+	 * @param Block[]|\Closure $blocks   The blocks to register the handler for, or a closure when registering a group.
+	 * @param \Closure         $handler  The handler to determine if the block can be supported.
+	 * @param bool             $override Whether to override an existing handler for the block type.
 	 * @throws \InvalidArgumentException If the block type or group id is already registered and override is false.
+	 *
+	 * @phpstan-param list<Block>|\Closure(Block, Block, int) : bool $blocks
+	 * @phpstan-param \Closure(Block, Block, int) : bool $handler
 	 */
 	public function register(array|\Closure $blocks, \Closure $handler, bool $override = false, ?int $group = null) : void{
 		if (is_array($blocks)){
@@ -362,7 +371,9 @@ final class BlockSupportRegistry{
 				$this->supportTypes[$block->getTypeId()] = $handler;
 			}
 		} else {
-			assert($group === null, new \InvalidArgumentException("Group ID must not be null"));
+			if ($group === null) {
+				throw new \InvalidArgumentException("Group ID must not be null");
+			}
 
 			if (!$override && isset($this->supportTypesClosures[$group])) {
 				throw new \InvalidArgumentException("Block support type for the group with id {$group} is already registered");
@@ -386,20 +397,21 @@ final class BlockSupportRegistry{
 	/**
 	 * Checks if a block type is supported based on its registered handler.
 	 *
-	 * @param Block $block   The block to check.
-	 * @param mixed ...$args Additional arguments to pass to the handler.
+	 * @param Block    $blockIn The block to check.
+	 * @param Block    $block   The block that would support it.
+	 * @param int|null $facing  The face the block is attached to, for handlers which need it.
 	 * @return bool Whether the block type is supported.
 	 */
-	public function isTypeSupported(Block $block, ...$args) : bool{
-		if (isset($this->supportTypes[$block->getTypeId()])) {
-			return $this->supportTypes[$block->getTypeId()]($block, ...$args);
+	public function isTypeSupported(Block $blockIn, Block $block, ?int $facing = null) : bool{
+		$handler = $this->supportTypes[$blockIn->getTypeId()] ??
+			$this->supportTypesClosures[self::getBlockGroup($blockIn)] ??
+			null;
+		if ($handler === null) {
+			return false;
 		}
 
-		if (isset($this->supportTypesClosures[($group = self::getBlockGroup($block))])){
-			return $this->supportTypesClosures[$group]($block, ...$args);
-		}
-
-		return false;
+		//handlers which don't take a facing simply ignore it
+		return $handler($blockIn, $block, $facing ?? Facing::DOWN);
 	}
 
 	/**

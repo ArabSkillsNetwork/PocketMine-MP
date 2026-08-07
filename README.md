@@ -20,6 +20,30 @@
 	<a href="https://github.com/pmmp/PocketMine-MP/releases/latest"><img alt="GitHub release (latest by SemVer)" src="https://img.shields.io/github/downloads/pmmp/PocketMine-MP/latest/total?sort=semver"></a>
 </p>
 
+## About this fork
+This is [ArabSkillsNetwork](https://github.com/ArabSkillsNetwork)'s fork of PocketMine-MP, maintained for [arabskills.net](https://arabskills.net). What it adds on top of upstream:
+
+**`BlockSupportRegistry`** — upstream hardcodes inside each block class the rule for whether it can stay where it is, so changing it means replacing the block. This fork moves those rules into one registry ([`pocketmine\block\utils\BlockSupportRegistry`](src/block/utils/BlockSupportRegistry.php)) that plugins can override at runtime:
+
+```php
+use pocketmine\block\Block;
+use pocketmine\block\utils\BlockSupportRegistry;
+use pocketmine\block\VanillaBlocks;
+
+//stop cacti from breaking when a block is placed beside them
+BlockSupportRegistry::getInstance()->register(
+    [VanillaBlocks::CACTUS()],
+    fn(Block $blockIn, Block $block, int $facing) : bool => true,
+    override: true
+);
+```
+
+Rules can be set per block type, or for a whole group (`GROUP_TORCH`, `GROUP_SAPLING`, `GROUP_CROPS`, …) so one handler covers every block of that kind.
+
+**Dynamic entity network type IDs** — `Entity::getNetworkTypeId()` is an instance method instead of a static one, so one entity class can report a different network type per instance. This is what custom entities driven by a resource pack need: the server sends the pack's entity identifier while reusing a single PHP class.
+
+**Optional WaterdogPE support** — direct connections keep their real IP and XUID, and the same build still works behind a WaterdogPE proxy with no separate configuration.
+
 ## What is this?
 PocketMine-MP is a highly customisable server software for Minecraft: Bedrock Edition, built from scratch in PHP, with over 10 years of history.
 
