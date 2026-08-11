@@ -39,8 +39,54 @@ use const JSON_THROW_ON_ERROR;
 
 class LegacySkinAdapter implements SkinAdapter{
 	private const DEFAULT_GEOMETRY_NAME = "geometry.humanoid.custom";
+	private const SLIM_GEOMETRY_NAME = "geometry.humanoid.customSlim";
 
-	private static ?string $defaultGeometryData = null;
+	/**
+	 * Vanilla player geometries that clients reference without ever shipping a definition for them.
+	 * Both the wide (Steve) and the slim (Alex) variant are affected in exactly the same way.
+	 */
+	private const DEFAULT_GEOMETRY_NAMES = [
+		self::DEFAULT_GEOMETRY_NAME => true,
+		self::SLIM_GEOMETRY_NAME => true,
+	];
+
+	/**
+	 * @var array<string, string>|null
+	 * @phpstan-var array<string, string>|null
+	 */
+	private static ?array $defaultGeometryData = null;
+
+	/**
+	 * Returns a standalone geometry document containing only the requested definition, so a skin never
+	 * carries a geometry it doesn't reference.
+	 */
+	private static function defaultGeometryFor(string $geometryName) : ?string{
+		if(self::$defaultGeometryData === null){
+			$decoded = json_decode(Filesystem::fileGetContents(
+				Path::join(\pocketmine\RESOURCE_PATH, "default_skin_geometry.json")
+			), true);
+			$formatVersion = is_array($decoded) && is_string($decoded["format_version"] ?? null) ? $decoded["format_version"] : "1.21.0";
+			$geometries = is_array($decoded) && is_array($decoded["minecraft:geometry"] ?? null) ? $decoded["minecraft:geometry"] : [];
+
+			$result = [];
+			foreach($geometries as $geometry){
+				$identifier = is_array($geometry) ? ($geometry["description"]["identifier"] ?? null) : null;
+				if(!is_string($identifier)){
+					continue;
+				}
+				$encoded = json_encode([
+					"format_version" => $formatVersion,
+					"minecraft:geometry" => [$geometry],
+				]);
+				if($encoded !== false){
+					$result[$identifier] = $encoded;
+				}
+			}
+			self::$defaultGeometryData = $result;
+		}
+
+		return self::$defaultGeometryData[$geometryName] ?? null;
+	}
 
 	public function toSkinData(Skin $skin) : SkinData{
 		$capeData = $skin->getCapeData();
@@ -50,9 +96,9 @@ class LegacySkinAdapter implements SkinAdapter{
 			$geometryName = self::DEFAULT_GEOMETRY_NAME;
 		}
 		$geometryData = $skin->getGeometryData();
-		if($geometryData === "" && $geometryName === self::DEFAULT_GEOMETRY_NAME){
+		if($geometryData === "" && isset(self::DEFAULT_GEOMETRY_NAMES[$geometryName])){
 			//since 1.26.40 the client disconnects if a skin names a geometry it doesn't ship a definition for
-			$geometryData = self::$defaultGeometryData ??= Filesystem::fileGetContents(Path::join(\pocketmine\RESOURCE_PATH, "default_skin_geometry.json"));
+			$geometryData = self::defaultGeometryFor($geometryName) ?? $geometryData;
 		}
 		return new SkinData(
 			$skin->getSkinId(),
