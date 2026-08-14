@@ -70,7 +70,8 @@ class LegacySkinAdapter implements SkinAdapter{
 
 			$result = [];
 			foreach($geometries as $geometry){
-				$identifier = is_array($geometry) ? ($geometry["description"]["identifier"] ?? null) : null;
+				$description = is_array($geometry) ? ($geometry["description"] ?? null) : null;
+				$identifier = is_array($description) ? ($description["identifier"] ?? null) : null;
 				if(!is_string($identifier)){
 					continue;
 				}
