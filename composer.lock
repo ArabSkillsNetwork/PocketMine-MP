@@ -257,12 +257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "dde9c5c5bb31a086458d7ede9e629c4f574517c3"
+                "reference": "0e32b320125978460f94e8c6769bb853f468c8f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/dde9c5c5bb31a086458d7ede9e629c4f574517c3",
-                "reference": "dde9c5c5bb31a086458d7ede9e629c4f574517c3",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/0e32b320125978460f94e8c6769bb853f468c8f8",
+                "reference": "0e32b320125978460f94e8c6769bb853f468c8f8",
                 "shasum": ""
             },
             "require": {
@@ -305,7 +305,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2026-08-14T22:44:38+00:00"
+            "time": "2026-08-15T11:29:27+00:00"
         },
         {
             "name": "pocketmine/binaryutils",

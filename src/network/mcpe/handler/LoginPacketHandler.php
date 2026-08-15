@@ -33,6 +33,7 @@ use pocketmine\network\mcpe\JwtException;
 use pocketmine\network\mcpe\JwtUtils;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\LoginPacket;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\types\login\AuthenticationInfo;
 use pocketmine\network\mcpe\protocol\types\login\AuthenticationType;
 use pocketmine\network\mcpe\protocol\types\login\clientdata\ClientData;
@@ -46,6 +47,7 @@ use pocketmine\player\PlayerInfo;
 use pocketmine\player\XboxLivePlayerInfo;
 use pocketmine\Server;
 use pocketmine\utils\Utils;
+use pocketmine\utils\VersionString;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use function base64_decode;
@@ -145,6 +147,23 @@ class LoginPacketHandler extends PacketHandler{
 		}
 
 		$clientData = $this->parseClientData($packet->clientDataJwt);
+
+		//TODO: HACK! 1.26.44 changed the protocol without changing the protocol version, so older clients
+		//pass the protocol check and then fail to read the new format. Drop this once the version moves on.
+		try{
+			$gameVersion = new VersionString($clientData->GameVersion);
+		}catch(\InvalidArgumentException $e){
+			throw PacketHandlingException::wrap($e, "Invalid game version");
+		}
+		if($gameVersion->getMajor() === 1 && $gameVersion->getMinor() === 26 && $gameVersion->getPatch() < 44){
+			$this->session->disconnectWithError(
+				reason: "Client version " . $clientData->GameVersion . " predates " . ProtocolInfo::MINECRAFT_VERSION_NETWORK,
+				disconnectScreenMessage: KnownTranslationFactory::disconnectionScreen_outdatedClient()
+			);
+
+			return null;
+		}
+
 		if($clientData->Waterdog_XUID !== null){
 			$xuid = $clientData->Waterdog_XUID;
 		}
