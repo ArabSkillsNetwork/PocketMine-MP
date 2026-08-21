@@ -93,7 +93,13 @@ final class ItemStackResponseBuilder{
 					$item->getCount(),
 					$itemStackInfo->getStackId(),
 					$item->getCustomName(),
-					$item->getCustomName(),
+					//filteredCustomName is the profanity-filtered form of the name. We don't do any
+					//filtering, so we have nothing to put here, and sending the unfiltered name is
+					//wrong twice over: a client with the filter enabled reads this field in
+					//preference to customName, and any non-empty value here makes clients on
+					//1.21.50 and up drop the connection with "An error occurred" the moment a named
+					//item is moved. The name still reaches the client in the item's NBT.
+					"",
 					$item instanceof Durable ? $item->getDamage() : 0,
 				);
 			}
