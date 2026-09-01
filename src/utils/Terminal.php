@@ -70,6 +70,7 @@ abstract class Terminal{
 	public static string $COLOR_MATERIAL_LAPIS = "";
 	public static string $COLOR_MATERIAL_AMETHYST = "";
 	public static string $COLOR_MATERIAL_RESIN = "";
+	public static string $COLOR_PARTY_BLUE = "";
 
 	private static ?bool $formattingCodes = null;
 
@@ -133,6 +134,7 @@ abstract class Terminal{
 		self::$COLOR_MATERIAL_LAPIS = $color(24);
 		self::$COLOR_MATERIAL_AMETHYST = $color(98);
 		self::$COLOR_MATERIAL_RESIN = $color(208);
+		self::$COLOR_PARTY_BLUE = $color(111);
 	}
 
 	protected static function getEscapeCodes() : void{
@@ -182,7 +184,7 @@ abstract class Terminal{
 			self::$COLOR_RED = self::$COLOR_DARK_RED = self::$COLOR_MATERIAL_REDSTONE = self::$COLOR_MATERIAL_COPPER = $setaf(1);
 			self::$COLOR_GREEN = self::$COLOR_DARK_GREEN = self::$COLOR_MATERIAL_EMERALD = $setaf(2);
 			self::$COLOR_YELLOW = self::$COLOR_GOLD = self::$COLOR_MINECOIN_GOLD = self::$COLOR_MATERIAL_GOLD = self::$COLOR_MATERIAL_RESIN = $setaf(3);
-			self::$COLOR_BLUE = self::$COLOR_DARK_BLUE = self::$COLOR_MATERIAL_LAPIS = $setaf(4);
+			self::$COLOR_BLUE = self::$COLOR_DARK_BLUE = self::$COLOR_MATERIAL_LAPIS = self::$COLOR_PARTY_BLUE = $setaf(4);
 			self::$COLOR_LIGHT_PURPLE = self::$COLOR_PURPLE = self::$COLOR_MATERIAL_AMETHYST = $setaf(5);
 			self::$COLOR_AQUA = self::$COLOR_DARK_AQUA = self::$COLOR_MATERIAL_DIAMOND = $setaf(6);
 			self::$COLOR_GRAY = self::$COLOR_WHITE = self::$COLOR_MATERIAL_QUARTZ = self::$COLOR_MATERIAL_IRON = $setaf(7);

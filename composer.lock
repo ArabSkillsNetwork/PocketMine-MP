@@ -257,12 +257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "0e32b320125978460f94e8c6769bb853f468c8f8"
+                "reference": "32fdc271f89ab7b7d6f0b6f05917eb445921fd70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/0e32b320125978460f94e8c6769bb853f468c8f8",
-                "reference": "0e32b320125978460f94e8c6769bb853f468c8f8",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/32fdc271f89ab7b7d6f0b6f05917eb445921fd70",
+                "reference": "32fdc271f89ab7b7d6f0b6f05917eb445921fd70",
                 "shasum": ""
             },
             "require": {
@@ -305,7 +305,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2026-08-15T11:29:27+00:00"
+            "time": "2026-09-01T19:15:29+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -347,6 +347,7 @@
                 "issues": "https://github.com/pmmp/BinaryUtils/issues",
                 "source": "https://github.com/pmmp/BinaryUtils/tree/0.2.7"
             },
+            "abandoned": true,
             "time": "2025-12-24T04:20:35+00:00"
         },
         {
@@ -397,6 +398,7 @@
                 "issues": "https://github.com/pmmp/CallbackValidator/issues",
                 "source": "https://github.com/pmmp/CallbackValidator/tree/1.0.4"
             },
+            "abandoned": true,
             "time": "2025-12-24T01:25:05+00:00"
         },
         {
@@ -435,6 +437,7 @@
                 "issues": "https://github.com/pmmp/Color/issues",
                 "source": "https://github.com/pmmp/Color/tree/0.3.1"
             },
+            "abandoned": true,
             "time": "2023-04-10T11:38:05+00:00"
         },
         {
@@ -474,6 +477,7 @@
                 "issues": "https://github.com/pmmp/ErrorHandler/issues",
                 "source": "https://github.com/pmmp/ErrorHandler/tree/0.7.1"
             },
+            "abandoned": true,
             "time": "2025-12-24T02:26:52+00:00"
         },
         {
@@ -515,6 +519,7 @@
                 "issues": "https://github.com/pmmp/Log/issues",
                 "source": "https://github.com/pmmp/Log/tree/0.4.0"
             },
+            "abandoned": true,
             "time": "2021-06-18T19:08:09+00:00"
         },
         {
@@ -556,6 +561,7 @@
                 "issues": "https://github.com/pmmp/Math/issues",
                 "source": "https://github.com/pmmp/Math/tree/1.0.0"
             },
+            "abandoned": true,
             "time": "2023-08-03T12:56:33+00:00"
         },
         {
@@ -599,6 +605,7 @@
                 "issues": "https://github.com/pmmp/NBT/issues",
                 "source": "https://github.com/pmmp/NBT/tree/1.2.0"
             },
+            "abandoned": true,
             "time": "2025-09-19T18:09:30+00:00"
         },
         {
@@ -642,6 +649,7 @@
                 "issues": "https://github.com/pmmp/RakLib/issues",
                 "source": "https://github.com/pmmp/RakLib/tree/1.2.1"
             },
+            "abandoned": true,
             "time": "2025-12-24T03:02:42+00:00"
         },
         {
@@ -683,6 +691,7 @@
                 "issues": "https://github.com/pmmp/RakLibIpc/issues",
                 "source": "https://github.com/pmmp/RakLibIpc/tree/1.0.1"
             },
+            "abandoned": true,
             "time": "2024-03-01T15:55:05+00:00"
         },
         {
@@ -723,6 +732,7 @@
                 "issues": "https://github.com/pmmp/Snooze/issues",
                 "source": "https://github.com/pmmp/Snooze/tree/0.5.0"
             },
+            "abandoned": true,
             "time": "2023-05-22T23:43:01+00:00"
         },
         {
@@ -881,16 +891,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v6.4.43",
+            "version": "v6.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "9ff03da12d67649fbd1f34ca95951554624d0a16"
+                "reference": "6dabf41c21957a2060f101bd7bf7e322989866bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/9ff03da12d67649fbd1f34ca95951554624d0a16",
-                "reference": "9ff03da12d67649fbd1f34ca95951554624d0a16",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/6dabf41c21957a2060f101bd7bf7e322989866bd",
+                "reference": "6dabf41c21957a2060f101bd7bf7e322989866bd",
                 "shasum": ""
             },
             "require": {
@@ -927,7 +937,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v6.4.43"
+                "source": "https://github.com/symfony/filesystem/tree/v6.4.45"
             },
             "funding": [
                 {
@@ -947,7 +957,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-27T10:13:35+00:00"
+            "time": "2026-08-23T07:59:31+00:00"
         }
     ],
     "packages-dev": [
