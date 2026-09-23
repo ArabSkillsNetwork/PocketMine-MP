@@ -74,6 +74,8 @@ use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
 use pocketmine\network\mcpe\protocol\RequestChunkRadiusPacket;
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
 use pocketmine\network\mcpe\protocol\SetActorMotionPacket;
+
+use pocketmine\network\mcpe\protocol\SetPlayerFurnaceOptionsPacket;
 use pocketmine\network\mcpe\protocol\SetPlayerGameTypePacket;
 use pocketmine\network\mcpe\protocol\SpawnExperienceOrbPacket;
 use pocketmine\network\mcpe\protocol\TextPacket;
@@ -126,6 +128,7 @@ use const JSON_THROW_ON_ERROR;
 #[SilentDiscard(NetworkStackLatencyPacket::class, comment: "Not used, noisy debug")]
 #[SilentDiscard(PlayerHotbarPacket::class, comment: "Not needed")]
 #[SilentDiscard(SetActorMotionPacket::class, comment: "Not needed, erroneously sent by client when in a vehicle")]
+#[SilentDiscard(SetPlayerFurnaceOptionsPacket::class, comment: "Furnace UI state is client-side")]
 #[SilentDiscard(SpawnExperienceOrbPacket::class, comment: "XP drops should be server-calculated")]
 class InGamePacketHandler extends PacketHandler{
 	private const MAX_FORM_RESPONSE_SIZE = 10 * 1024; //10 KiB should be more than enough

@@ -71,6 +71,9 @@ class PreSpawnPacketHandler extends PacketHandler{
 
 			$typeConverter = $this->session->getTypeConverter();
 
+			$this->session->getLogger()->debug("Sending JigsawStructureData");
+			$this->session->sendDataPacket(StaticPacketCache::getInstance()->getJigsawStructureData());
+
 			$this->session->getLogger()->debug("Sending voxel shapes");
 			//the client resolves block shapes against this registry, so it has to arrive before StartGamePacket
 			$this->session->sendDataPacket(StaticPacketCache::getInstance()->getVoxelShapes());
@@ -119,7 +122,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 				new NetworkPermissions(disableClientSounds: true),
 				null,
 				new ServerTelemetryData("", "", "", ""),
-				[],
+				StaticPacketCache::getInstance()->getBlockPaletteEntries(),
 				0,
 			));
 
@@ -130,7 +133,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 			$this->session->sendDataPacket(StaticPacketCache::getInstance()->getAvailableActorIdentifiers());
 
 			$this->session->getLogger()->debug("Sending biome definitions");
-			$this->session->sendDataPacket(StaticPacketCache::getInstance()->getBiomeDefs());
+			$this->session->sendDataPacket(StaticPacketCache::getInstance()->getBiomeDefs()); // try
 
 			$this->session->getLogger()->debug("Sending attributes");
 			$this->session->getEntityEventBroadcaster()->syncAttributes([$this->session], $this->player, $this->player->getAttributeMap()->getAll());

@@ -85,7 +85,7 @@ final class CraftingDataCache{
 		$converter = TypeConverter::getInstance();
 		$recipesWithTypeIds = [];
 
-		$noUnlockingRequirement = new RecipeUnlockingRequirement(RecipeUnlockingRequirement::CONTEXT_NONE, []);
+		$noUnlockingRequirement = new RecipeUnlockingRequirement(RecipeUnlockingRequirement::CONTEXT_ALWAYS_UNLOCKED, []);
 		$recipeNetId = self::RECIPE_ID_OFFSET;
 		foreach($manager->getCraftingRecipeIndex() as $index => $recipe){
 			//the client doesn't like recipes with an ID of 0, so we need to offset them

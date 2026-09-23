@@ -50,7 +50,6 @@ use pocketmine\network\mcpe\protocol\types\GameMode as ProtocolGameMode;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackExtraData;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackExtraDataShield;
-use pocketmine\network\mcpe\protocol\types\recipe\IntIdMetaItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\RecipeIngredient as ProtocolRecipeIngredient;
 use pocketmine\network\mcpe\protocol\types\recipe\StringIdMetaItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\TagItemDescriptor;
@@ -177,10 +176,7 @@ class TypeConverter{
 			return new TagWildcardRecipeIngredient($descriptor->getTag());
 		}
 
-		if($descriptor instanceof IntIdMetaItemDescriptor){
-			$stringId = $this->itemTypeDictionary->fromIntId($descriptor->getId());
-			$meta = $descriptor->getMeta();
-		}elseif($descriptor instanceof StringIdMetaItemDescriptor){
+		if($descriptor instanceof StringIdMetaItemDescriptor){
 			$stringId = $descriptor->getId();
 			$meta = $descriptor->getMeta();
 		}else{

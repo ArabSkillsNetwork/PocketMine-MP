@@ -27,10 +27,13 @@ use pmmp\encoding\ByteBufferReader;
 use pocketmine\color\Color;
 use pocketmine\data\bedrock\BedrockDataFiles;
 use pocketmine\data\SavedDataLoadingException;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\AvailableActorIdentifiersPacket;
 use pocketmine\network\mcpe\protocol\BiomeDefinitionListPacket;
+use pocketmine\network\mcpe\protocol\JigsawStructureDataPacket;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\types\biome\BiomeDefinitionEntry;
+use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\VoxelShapesPacket;
 use pocketmine\utils\Filesystem;
@@ -46,7 +49,7 @@ class StaticPacketCache{
 	use SingletonTrait;
 
 	/**
-	 * @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+	 * @phpstan-return CacheableNbt<CompoundTag>
 	 */
 	private static function loadCompoundFromFile(string $filePath) : CacheableNbt{
 		return new CacheableNbt((new NetworkNbtSerializer())->read(Filesystem::fileGetContents($filePath))->mustGetCompoundTag());
@@ -56,6 +59,33 @@ class StaticPacketCache{
 		$packet = new VoxelShapesPacket();
 		$packet->decode(new ByteBufferReader(Filesystem::fileGetContents($filePath)));
 		return $packet;
+	}
+
+	/** @phpstan-return list<BlockPaletteEntry> */
+	private static function loadDataDrivenBlockPalette(string $filePath) : array{
+		$nbt = self::loadCompoundFromFile($filePath)->getRoot();
+		if(!$nbt instanceof CompoundTag){
+			throw new SavedDataLoadingException("$filePath should contain a CompoundTag, got " . get_debug_type($nbt));
+		}
+		$paletteNBT = $nbt->getListTag("blockPalette");
+		if($paletteNBT === null){
+			throw new SavedDataLoadingException("$filePath should contain a blockPalette ListTag");
+		}
+
+		$palette = [];
+		foreach($paletteNBT->getValue() as $entryNBT){
+			if(!$entryNBT instanceof CompoundTag){
+				throw new SavedDataLoadingException("$filePath blockPalette should contain CompoundTag entries, got " . get_debug_type($entryNBT));
+			}
+			$name = $entryNBT->getString("name");
+			$states = $entryNBT->getCompoundTag("states");
+			if($states === null){
+				throw new SavedDataLoadingException("$filePath blockPalette entry $name should contain a states CompoundTag");
+			}
+			$palette[] = new BlockPaletteEntry($name, new CacheableNbt($states));
+		}
+
+		return $palette;
 	}
 
 	/**
@@ -111,14 +141,19 @@ class StaticPacketCache{
 		return new self(
 			BiomeDefinitionListPacket::fromDefinitions(self::loadBiomeDefinitionModel(BedrockDataFiles::BIOME_DEFINITIONS_JSON)),
 			AvailableActorIdentifiersPacket::create(self::loadCompoundFromFile(BedrockDataFiles::ENTITY_IDENTIFIERS_NBT)),
-			self::loadVoxelShapes(BedrockDataFiles::VOXEL_SHAPES_BIN)
+			JigsawStructureDataPacket::create(self::loadCompoundFromFile(BedrockDataFiles::JIGSAW_STRUCTURES_DATA_NBT)),
+			self::loadVoxelShapes(BedrockDataFiles::VOXEL_SHAPES_BIN),
+			self::loadDataDrivenBlockPalette(BedrockDataFiles::DATA_DRIVEN_BLOCKS_NBT)
 		);
 	}
 
+	/** @phpstan-param list<BlockPaletteEntry> $blockPaletteEntries */
 	public function __construct(
 		private BiomeDefinitionListPacket $biomeDefs,
 		private AvailableActorIdentifiersPacket $availableActorIdentifiers,
-		private VoxelShapesPacket $voxelShapes
+		private JigsawStructureDataPacket $jigsawStructureData,
+		private VoxelShapesPacket $voxelShapes,
+		private array $blockPaletteEntries
 	){}
 
 	public function getBiomeDefs() : BiomeDefinitionListPacket{
@@ -129,7 +164,16 @@ class StaticPacketCache{
 		return $this->availableActorIdentifiers;
 	}
 
+	public function getJigsawStructureData() : JigsawStructureDataPacket{
+		return $this->jigsawStructureData;
+	}
+
 	public function getVoxelShapes() : VoxelShapesPacket{
 		return $this->voxelShapes;
+	}
+
+	/** @return BlockPaletteEntry[] */
+	public function getBlockPaletteEntries() : array{
+		return $this->blockPaletteEntries;
 	}
 }
