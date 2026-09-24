@@ -172,7 +172,7 @@ class StaticPacketCache{
 		return $this->voxelShapes;
 	}
 
-	/** @return BlockPaletteEntry[] */
+	/** @return list<BlockPaletteEntry> */
 	public function getBlockPaletteEntries() : array{
 		return $this->blockPaletteEntries;
 	}
