@@ -23,35 +23,32 @@ declare(strict_types=1);
 
 namespace pocketmine\block;
 
+use pocketmine\block\utils\HorizontalConnectable;
+use pocketmine\block\utils\HorizontalConnectableTrait;
 use pocketmine\block\utils\SupportType;
 use pocketmine\math\Axis;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Facing;
 use function count;
 
-class Fence extends Transparent{
-	/** @var bool[] facing => dummy */
-	protected array $connections = [];
+class Fence extends Transparent implements HorizontalConnectable{
+	use HorizontalConnectableTrait;
 
 	public function getThickness() : float{
 		return 0.25;
 	}
 
-	public function readStateFromWorld() : Block{
-		parent::readStateFromWorld();
-
-		$this->collisionBoxes = null;
-
+	protected function recalculateConnections() : bool{
+		$changed = false;
 		foreach(Facing::HORIZONTAL as $facing){
 			$block = $this->getSide($facing);
-			if($block instanceof static || $block instanceof FenceGate || $block->getSupportType(Facing::opposite($facing)) === SupportType::FULL){
-				$this->connections[$facing] = true;
-			}else{
-				unset($this->connections[$facing]);
+			$connected = $block instanceof static || $block instanceof FenceGate || $block->getSupportType(Facing::opposite($facing)) === SupportType::FULL;
+			if($connected !== $this->isConnectedAt($facing)){
+				$this->setConnectedAt($facing, $connected);
+				$changed = true;
 			}
 		}
-
-		return $this;
+		return $changed;
 	}
 
 	protected function recalculateCollisionBoxes() : array{
@@ -59,8 +56,8 @@ class Fence extends Transparent{
 
 		$bbs = [];
 
-		$connectWest = isset($this->connections[Facing::WEST]);
-		$connectEast = isset($this->connections[Facing::EAST]);
+		$connectWest = $this->isConnectedAt(Facing::WEST);
+		$connectEast = $this->isConnectedAt(Facing::EAST);
 
 		if($connectWest || $connectEast){
 			//X axis (west/east)
@@ -71,8 +68,8 @@ class Fence extends Transparent{
 				->trim(Facing::EAST, $connectEast ? 0 : $inset);
 		}
 
-		$connectNorth = isset($this->connections[Facing::NORTH]);
-		$connectSouth = isset($this->connections[Facing::SOUTH]);
+		$connectNorth = $this->isConnectedAt(Facing::NORTH);
+		$connectSouth = $this->isConnectedAt(Facing::SOUTH);
 
 		if($connectNorth || $connectSouth){
 			//Z axis (north/south)
