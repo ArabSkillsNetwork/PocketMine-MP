@@ -31,7 +31,7 @@ use function str_repeat;
 
 final class VersionInfo{
 	public const NAME = "ArabSkills-PM";
-	public const BASE_VERSION = "5.48.0";
+	public const BASE_VERSION = "5.48.1";
 	public const IS_DEVELOPMENT_BUILD = false;
 	public const BUILD_CHANNEL = "stable";
 	public const GITHUB_URL = "https://github.com/ArabSkillsNetwork/PocketMine-MP";
