@@ -182,12 +182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockBlockUpgradeSchema.git",
-                "reference": "581e29ffecfc846e982203d473f5901e995f7165"
+                "reference": "6947679a4597aec03cdba52e94af43819c65d309"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockBlockUpgradeSchema/zipball/581e29ffecfc846e982203d473f5901e995f7165",
-                "reference": "581e29ffecfc846e982203d473f5901e995f7165",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockBlockUpgradeSchema/zipball/6947679a4597aec03cdba52e94af43819c65d309",
+                "reference": "6947679a4597aec03cdba52e94af43819c65d309",
                 "shasum": ""
             },
             "default-branch": true,
@@ -199,7 +199,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockBlockUpgradeSchema/tree/master"
             },
-            "time": "2025-11-01T23:12:22+00:00"
+            "time": "2026-09-25T16:40:30+00:00"
         },
         {
             "name": "pocketmine/bedrock-data",
