@@ -128,6 +128,8 @@ final class BlockStateUpgradeSchemaUtils{
 		$result->renamedIds = $model->renamedIds ?? [];
 		$result->renamedProperties = $model->renamedProperties ?? [];
 		$result->removedProperties = $model->removedProperties ?? [];
+		$result->forceApplyAddedProperties = $model->forceApplyAddedProperties;
+		$result->forceApplyRenamedIds = $model->forceApplyRenamedIds;
 
 		foreach(Utils::stringifyKeys($model->addedProperties ?? []) as $blockName => $properties){
 			foreach(Utils::stringifyKeys($properties) as $propertyName => $propertyValue){
@@ -293,6 +295,8 @@ final class BlockStateUpgradeSchemaUtils{
 		$result->maxVersionMinor = $schema->maxVersionMinor;
 		$result->maxVersionPatch = $schema->maxVersionPatch;
 		$result->maxVersionRevision = $schema->maxVersionRevision;
+		$result->forceApplyAddedProperties = $schema->forceApplyAddedProperties;
+		$result->forceApplyRenamedIds = $schema->forceApplyRenamedIds;
 
 		$result->renamedIds = $schema->renamedIds;
 		ksort($result->renamedIds);

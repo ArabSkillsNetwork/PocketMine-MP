@@ -113,6 +113,39 @@ class BlockStateUpgraderTest extends TestCase{
 		self::assertTrue($stateData->equals($upgradedStateData), "Adding a property that already exists with a different value should not alter the state");
 	}
 
+	public function testForceAddPropertyForLaterStateVersion() : void{
+		$schema = $this->getNewSchemaVersion(self::TEST_VERSION, 0);
+		$schema->forceApplyAddedProperties = true;
+		$this->prepareAddPropertySchema($schema);
+
+		$stateData = new BlockStateData(self::TEST_BLOCK, [], self::TEST_VERSION + 1);
+		$upgradedStateData = $this->upgrade($stateData, fn() => $stateData);
+
+		self::assertSame(self::TEST_PROPERTY_VALUE_1, $upgradedStateData->getState(self::TEST_PROPERTY)?->getValue());
+	}
+
+	public function testForceAddPropertyDoesNotOverwriteLaterStateVersion() : void{
+		$schema = $this->getNewSchemaVersion(self::TEST_VERSION, 0);
+		$schema->forceApplyAddedProperties = true;
+		$this->prepareAddPropertySchema($schema);
+
+		$stateData = new BlockStateData(self::TEST_BLOCK, [self::TEST_PROPERTY => new IntTag(self::TEST_PROPERTY_VALUE_2)], self::TEST_VERSION + 1);
+		$upgradedStateData = $this->upgrade($stateData, fn() => $stateData);
+
+		self::assertSame(self::TEST_PROPERTY_VALUE_2, $upgradedStateData->getState(self::TEST_PROPERTY)?->getValue());
+	}
+
+	public function testForceRenameIdForLaterStateVersion() : void{
+		$schema = $this->getNewSchemaVersion(self::TEST_VERSION, 0);
+		$schema->forceApplyRenamedIds = true;
+		$schema->renamedIds[self::TEST_BLOCK] = self::TEST_BLOCK_2;
+
+		$stateData = new BlockStateData(self::TEST_BLOCK, [], self::TEST_VERSION + 1);
+		$upgradedStateData = $this->upgrade($stateData, fn() => $stateData);
+
+		self::assertSame(self::TEST_BLOCK_2, $upgradedStateData->getName());
+	}
+
 	private function prepareRemovePropertySchema(BlockStateUpgradeSchema $schema) : void{
 		$schema->removedProperties[self::TEST_BLOCK][] = self::TEST_PROPERTY;
 	}

@@ -51,6 +51,10 @@ final class BlockStateUpgradeSchemaModel implements \JsonSerializable{
 	 */
 	public array $addedProperties;
 
+	public bool $forceApplyAddedProperties = false;
+
+	public bool $forceApplyRenamedIds = false;
+
 	/**
 	 * @var string[][]
 	 * @phpstan-var array<string, list<string>>
@@ -95,6 +99,12 @@ final class BlockStateUpgradeSchemaModel implements \JsonSerializable{
 
 		foreach($result as $k => $v){
 			if(is_array($v) && count($v) === 0){
+				unset($result[$k]);
+			}
+			if($k === "forceApplyAddedProperties" && $v === false){
+				unset($result[$k]);
+			}
+			if($k === "forceApplyRenamedIds" && $v === false){
 				unset($result[$k]);
 			}
 		}

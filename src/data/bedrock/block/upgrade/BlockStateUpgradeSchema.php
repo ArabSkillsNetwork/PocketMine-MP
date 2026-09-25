@@ -41,6 +41,10 @@ final class BlockStateUpgradeSchema{
 	 */
 	public array $addedProperties = [];
 
+	public bool $forceApplyAddedProperties = false;
+
+	public bool $forceApplyRenamedIds = false;
+
 	/**
 	 * @var string[][]
 	 * @phpstan-var array<string, list<string>>

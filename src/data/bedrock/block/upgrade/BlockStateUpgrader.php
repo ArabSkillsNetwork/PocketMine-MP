@@ -88,7 +88,19 @@ final class BlockStateUpgrader{
 			 * TODO: this causes issues when testing isolated schemas since there will only be one schema for a version.
 			 * The second check should be disabled for that case.
 			 */
-			if($version > $resultVersion || (count($schemaList) === 1 && $version === $resultVersion)){
+			if($version > $resultVersion){
+				foreach($schemaList as $schema){
+					if($schema->forceApplyAddedProperties){
+						$states = $this->applyPropertyAdded($schema, $name, $states);
+					}
+					if($schema->forceApplyRenamedIds && isset($schema->renamedIds[$name])){
+						$name = $schema->renamedIds[$name];
+					}
+				}
+				continue;
+			}
+
+			if(count($schemaList) === 1 && $version === $resultVersion){
 				continue;
 			}
 
