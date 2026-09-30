@@ -257,12 +257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "e2d637b2f51b71350b673e89e8008f0e21367643"
+                "reference": "1d17d7a181df44ac8dfb93ce906897be73026465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/e2d637b2f51b71350b673e89e8008f0e21367643",
-                "reference": "e2d637b2f51b71350b673e89e8008f0e21367643",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/1d17d7a181df44ac8dfb93ce906897be73026465",
+                "reference": "1d17d7a181df44ac8dfb93ce906897be73026465",
                 "shasum": ""
             },
             "require": {
@@ -303,9 +303,9 @@
             ],
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
-                "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/6.0.2+bedrock-1.26.50"
+                "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
             },
-            "time": "2026-09-30T02:04:00+00:00"
+            "time": "2026-09-30T03:34:25+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
