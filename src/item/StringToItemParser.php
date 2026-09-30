@@ -70,6 +70,8 @@ final class StringToItemParser extends StringToTParser{
 			$register("carpet", fn() => Blocks::CARPET()->setColor($color));
 			$register("concrete", fn() => Blocks::CONCRETE()->setColor($color));
 			$register("concrete_powder", fn() => Blocks::CONCRETE_POWDER()->setColor($color));
+			$register("concrete_slab", fn() => Blocks::CONCRETE_SLAB()->setColor($color));
+			$register("concrete_stairs", fn() => Blocks::CONCRETE_STAIRS()->setColor($color));
 			$register("glazed_terracotta", fn() => Blocks::GLAZED_TERRACOTTA()->setColor($color));
 			$register("stained_clay", fn() => Blocks::STAINED_CLAY()->setColor($color));
 			$register("stained_glass", fn() => Blocks::STAINED_GLASS()->setColor($color));
@@ -77,6 +79,8 @@ final class StringToItemParser extends StringToTParser{
 			$register("stained_hardened_glass", fn() => Blocks::STAINED_HARDENED_GLASS()->setColor($color));
 			$register("stained_hardened_glass_pane", fn() => Blocks::STAINED_HARDENED_GLASS_PANE()->setColor($color));
 			$register("wool", fn() => Blocks::WOOL()->setColor($color));
+			$register("wool_slab", fn() => Blocks::WOOL_SLAB()->setColor($color));
+			$register("wool_stairs", fn() => Blocks::WOOL_STAIRS()->setColor($color));
 			$register("shulker_box", fn() => Blocks::DYED_SHULKER_BOX()->setColor($color));
 		}
 
@@ -259,6 +263,7 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("chest", fn() => Blocks::CHEST());
 		$result->registerBlock("chipped_anvil", fn() => Blocks::ANVIL()->setDamage(1));
 		$result->registerBlock("chiseled_bookshelf", fn() => Blocks::CHISELED_BOOKSHELF());
+		$result->registerBlock("chiseled_cinnabar", fn() => Blocks::CHISELED_CINNABAR());
 		$result->registerBlock("chiseled_deepslate", fn() => Blocks::CHISELED_DEEPSLATE());
 		$result->registerBlock("chiseled_nether_bricks", fn() => Blocks::CHISELED_NETHER_BRICKS());
 		$result->registerBlock("chiseled_polished_blackstone", fn() => Blocks::CHISELED_POLISHED_BLACKSTONE());
@@ -267,10 +272,19 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("chiseled_resin_bricks", fn() => Blocks::CHISELED_RESIN_BRICKS());
 		$result->registerBlock("chiseled_sandstone", fn() => Blocks::CHISELED_SANDSTONE());
 		$result->registerBlock("chiseled_stone_bricks", fn() => Blocks::CHISELED_STONE_BRICKS());
+		$result->registerBlock("chiseled_sulfur", fn() => Blocks::CHISELED_SULFUR());
 		$result->registerBlock("chiseled_tuff", fn() => Blocks::CHISELED_TUFF());
 		$result->registerBlock("chiseled_tuff_bricks", fn() => Blocks::CHISELED_TUFF_BRICKS());
 		$result->registerBlock("chorus_flower", fn() => Blocks::CHORUS_FLOWER());
 		$result->registerBlock("chorus_plant", fn() => Blocks::CHORUS_PLANT());
+		$result->registerBlock("cinnabar", fn() => Blocks::CINNABAR());
+		$result->registerBlock("cinnabar_brick_slab", fn() => Blocks::CINNABAR_BRICK_SLAB());
+		$result->registerBlock("cinnabar_brick_stairs", fn() => Blocks::CINNABAR_BRICK_STAIRS());
+		$result->registerBlock("cinnabar_brick_wall", fn() => Blocks::CINNABAR_BRICK_WALL());
+		$result->registerBlock("cinnabar_bricks", fn() => Blocks::CINNABAR_BRICKS());
+		$result->registerBlock("cinnabar_slab", fn() => Blocks::CINNABAR_SLAB());
+		$result->registerBlock("cinnabar_stairs", fn() => Blocks::CINNABAR_STAIRS());
+		$result->registerBlock("cinnabar_wall", fn() => Blocks::CINNABAR_WALL());
 		$result->registerBlock("clay_block", fn() => Blocks::CLAY());
 		$result->registerBlock("coal_block", fn() => Blocks::COAL());
 		$result->registerBlock("coal_ore", fn() => Blocks::COAL_ORE());
@@ -726,6 +740,7 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("hardened_glass_pane", fn() => Blocks::HARDENED_GLASS_PANE());
 		$result->registerBlock("hay_bale", fn() => Blocks::HAY_BALE());
 		$result->registerBlock("hay_block", fn() => Blocks::HAY_BALE());
+		$result->registerBlock("heavy_core", fn() => Blocks::HEAVY_CORE());
 		$result->registerBlock("heavy_weighted_pressure_plate", fn() => Blocks::WEIGHTED_PRESSURE_PLATE_HEAVY());
 		$result->registerBlock("honeycomb_block", fn() => Blocks::HONEYCOMB());
 		$result->registerBlock("hopper", fn() => Blocks::HOPPER());
@@ -935,6 +950,10 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("polished_blackstone_slab", fn() => Blocks::POLISHED_BLACKSTONE_SLAB());
 		$result->registerBlock("polished_blackstone_stairs", fn() => Blocks::POLISHED_BLACKSTONE_STAIRS());
 		$result->registerBlock("polished_blackstone_wall", fn() => Blocks::POLISHED_BLACKSTONE_WALL());
+		$result->registerBlock("polished_cinnabar", fn() => Blocks::POLISHED_CINNABAR());
+		$result->registerBlock("polished_cinnabar_slab", fn() => Blocks::POLISHED_CINNABAR_SLAB());
+		$result->registerBlock("polished_cinnabar_stairs", fn() => Blocks::POLISHED_CINNABAR_STAIRS());
+		$result->registerBlock("polished_cinnabar_wall", fn() => Blocks::POLISHED_CINNABAR_WALL());
 		$result->registerBlock("polished_deepslate", fn() => Blocks::POLISHED_DEEPSLATE());
 		$result->registerBlock("polished_deepslate_slab", fn() => Blocks::POLISHED_DEEPSLATE_SLAB());
 		$result->registerBlock("polished_deepslate_stairs", fn() => Blocks::POLISHED_DEEPSLATE_STAIRS());
@@ -945,6 +964,10 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("polished_granite", fn() => Blocks::POLISHED_GRANITE());
 		$result->registerBlock("polished_granite_slab", fn() => Blocks::POLISHED_GRANITE_SLAB());
 		$result->registerBlock("polished_granite_stairs", fn() => Blocks::POLISHED_GRANITE_STAIRS());
+		$result->registerBlock("polished_sulfur", fn() => Blocks::POLISHED_SULFUR());
+		$result->registerBlock("polished_sulfur_slab", fn() => Blocks::POLISHED_SULFUR_SLAB());
+		$result->registerBlock("polished_sulfur_stairs", fn() => Blocks::POLISHED_SULFUR_STAIRS());
+		$result->registerBlock("polished_sulfur_wall", fn() => Blocks::POLISHED_SULFUR_WALL());
 		$result->registerBlock("polished_tuff", fn() => Blocks::POLISHED_TUFF());
 		$result->registerBlock("polished_tuff_slab", fn() => Blocks::POLISHED_TUFF_SLAB());
 		$result->registerBlock("polished_tuff_stairs", fn() => Blocks::POLISHED_TUFF_STAIRS());
@@ -954,6 +977,7 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("portal_block", fn() => Blocks::NETHER_PORTAL());
 		$result->registerBlock("potato_block", fn() => Blocks::POTATOES());
 		$result->registerBlock("potatoes", fn() => Blocks::POTATOES());
+		$result->registerBlock("potent_sulfur", fn() => Blocks::POTENT_SULFUR());
 		$result->registerBlock("powered_comparator", fn() => Blocks::REDSTONE_COMPARATOR());
 		$result->registerBlock("powered_comparator_block", fn() => Blocks::REDSTONE_COMPARATOR());
 		$result->registerBlock("powered_rail", fn() => Blocks::POWERED_RAIL());
@@ -992,6 +1016,7 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("red_nether_brick_stairs", fn() => Blocks::RED_NETHER_BRICK_STAIRS());
 		$result->registerBlock("red_nether_brick_wall", fn() => Blocks::RED_NETHER_BRICK_WALL());
 		$result->registerBlock("red_nether_bricks", fn() => Blocks::RED_NETHER_BRICKS());
+		$result->registerBlock("red_shrub", fn() => Blocks::RED_SHRUB());
 		$result->registerBlock("red_sand", fn() => Blocks::RED_SAND());
 		$result->registerBlock("red_sandstone", fn() => Blocks::RED_SANDSTONE());
 		$result->registerBlock("red_sandstone_slab", fn() => Blocks::RED_SANDSTONE_SLAB());
@@ -1033,6 +1058,7 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("sea_lantern", fn() => Blocks::SEA_LANTERN());
 		$result->registerBlock("sea_pickle", fn() => Blocks::SEA_PICKLE());
 		$result->registerBlock("sealantern", fn() => Blocks::SEA_LANTERN());
+		$result->registerBlock("shelf_mushroom", fn() => Blocks::SHELF_MUSHROOM());
 		$result->registerBlock("shroomlight", fn() => Blocks::SHROOMLIGHT());
 		$result->registerBlock("shulker_box", fn() => Blocks::SHULKER_BOX());
 		$result->registerBlock("sign", fn() => Blocks::OAK_SIGN());
@@ -1144,6 +1170,14 @@ final class StringToItemParser extends StringToTParser{
 		$result->registerBlock("sugar_canes", fn() => Blocks::SUGARCANE());
 		$result->registerBlock("sugarcane", fn() => Blocks::SUGARCANE());
 		$result->registerBlock("sugarcane_block", fn() => Blocks::SUGARCANE());
+		$result->registerBlock("sulfur", fn() => Blocks::SULFUR());
+		$result->registerBlock("sulfur_brick_slab", fn() => Blocks::SULFUR_BRICK_SLAB());
+		$result->registerBlock("sulfur_brick_stairs", fn() => Blocks::SULFUR_BRICK_STAIRS());
+		$result->registerBlock("sulfur_brick_wall", fn() => Blocks::SULFUR_BRICK_WALL());
+		$result->registerBlock("sulfur_bricks", fn() => Blocks::SULFUR_BRICKS());
+		$result->registerBlock("sulfur_slab", fn() => Blocks::SULFUR_SLAB());
+		$result->registerBlock("sulfur_stairs", fn() => Blocks::SULFUR_STAIRS());
+		$result->registerBlock("sulfur_wall", fn() => Blocks::SULFUR_WALL());
 		$result->registerBlock("sunflower", fn() => Blocks::SUNFLOWER());
 		$result->registerBlock("sweet_berry_bush", fn() => Blocks::SWEET_BERRY_BUSH());
 		$result->registerBlock("tall_grass", fn() => Blocks::TALL_GRASS());

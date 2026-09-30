@@ -63,12 +63,16 @@ class Slab extends Transparent{
 		return $this;
 	}
 
+	protected function canCombineWith(Slab $slab) : bool{
+		return $slab->slabType !== SlabType::DOUBLE && $slab->hasSameTypeId($this);
+	}
+
 	public function canBePlacedAt(Block $blockReplace, Vector3 $clickVector, int $face, bool $isClickedBlock) : bool{
 		if(parent::canBePlacedAt($blockReplace, $clickVector, $face, $isClickedBlock)){
 			return true;
 		}
 
-		if($blockReplace instanceof Slab && $blockReplace->slabType !== SlabType::DOUBLE && $blockReplace->hasSameTypeId($this)){
+		if($blockReplace instanceof Slab && $this->canCombineWith($blockReplace)){
 			if($blockReplace->slabType === SlabType::TOP){ //Trying to combine with top slab
 				return $clickVector->y <= 0.5 || (!$isClickedBlock && $face === Facing::UP);
 			}else{
@@ -80,7 +84,7 @@ class Slab extends Transparent{
 	}
 
 	public function place(BlockTransaction $tx, Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, ?Player $player = null) : bool{
-		if($blockReplace instanceof Slab && $blockReplace->slabType !== SlabType::DOUBLE && $blockReplace->hasSameTypeId($this) && (
+		if($blockReplace instanceof Slab && $this->canCombineWith($blockReplace) && (
 			($blockReplace->slabType === SlabType::TOP && ($clickVector->y <= 0.5 || $face === Facing::UP)) ||
 			($blockReplace->slabType === SlabType::BOTTOM && ($clickVector->y >= 0.5 || $face === Facing::DOWN))
 		)){
