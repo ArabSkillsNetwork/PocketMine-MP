@@ -32,6 +32,7 @@ use pocketmine\block\utils\FroglightType;
 use pocketmine\block\utils\LeverFacing;
 use pocketmine\block\utils\MobHeadType;
 use pocketmine\block\utils\MushroomBlockType;
+use pocketmine\block\utils\RedstoneWireConnection;
 use pocketmine\block\utils\StairShape;
 use pocketmine\data\bedrock\block\BlockLegacyMetadata as LegacyMeta;
 use pocketmine\data\bedrock\block\BlockStateStringValues as StringValues;
@@ -62,6 +63,11 @@ final class ValueMappings{
 	public readonly EnumFromRawStateMap $leverFacing;
 	/** @phpstan-var EnumFromRawStateMap<StairShape, string> */
 	public readonly EnumFromRawStateMap $stairCorner;
+	/**
+	 * The same values are used for redstone_north/east/south/west.
+	 * @phpstan-var EnumFromRawStateMap<RedstoneWireConnection, string>
+	 */
+	public readonly EnumFromRawStateMap $redstoneWireConnection;
 
 	/** @phpstan-var EnumFromRawStateMap<MushroomBlockType, int> */
 	public readonly EnumFromRawStateMap $mushroomBlockType;
@@ -177,6 +183,11 @@ final class ValueMappings{
 			StairShape::INNER_RIGHT => StringValues::MC_CORNER_INNER_RIGHT,
 			StairShape::OUTER_LEFT => StringValues::MC_CORNER_OUTER_LEFT,
 			StairShape::OUTER_RIGHT => StringValues::MC_CORNER_OUTER_RIGHT,
+		});
+		$this->redstoneWireConnection = EnumFromRawStateMap::string(RedstoneWireConnection::class, fn(RedstoneWireConnection $case) => match($case){
+			RedstoneWireConnection::NONE => StringValues::REDSTONE_NORTH_NONE,
+			RedstoneWireConnection::SIDE => StringValues::REDSTONE_NORTH_SIDE,
+			RedstoneWireConnection::UP => StringValues::REDSTONE_NORTH_UP,
 		});
 
 		$this->mushroomBlockType = EnumFromRawStateMap::int(

@@ -25,6 +25,7 @@ namespace pocketmine\block;
 
 use pocketmine\block\utils\BlockSupportRegistry;
 use pocketmine\block\utils\StaticSupportTrait;
+use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\math\AxisAlignedBB;
@@ -32,13 +33,33 @@ use pocketmine\math\Facing;
 use function mt_rand;
 
 final class ChorusPlant extends Flowable{
-	use StaticSupportTrait;
+	use StaticSupportTrait {
+		onNearbyBlockChange as protected checkSupport;
+	}
 
 	/**
-	 * @var true[]
-	 * @phpstan-var array<int, true>
+	 * @var int[] facing => facing
+	 * @phpstan-var array<int, int>
 	 */
 	protected array $connections = [];
+
+	protected function describeBlockOnlyState(RuntimeDataDescriber $w) : void{
+		$w->facingFlags($this->connections);
+	}
+
+	public function isConnectedAt(int $facing) : bool{
+		return isset($this->connections[$facing]);
+	}
+
+	/** @return $this */
+	public function setConnectedAt(int $facing, bool $connected) : self{
+		if($connected){
+			$this->connections[$facing] = $facing;
+		}else{
+			unset($this->connections[$facing]);
+		}
+		return $this;
+	}
 
 	protected function recalculateCollisionBoxes() : array{
 		$bb = AxisAlignedBB::one();
@@ -51,24 +72,34 @@ final class ChorusPlant extends Flowable{
 		return [$bb];
 	}
 
-	public function readStateFromWorld() : Block{
-		parent::readStateFromWorld();
+	public function onNearbyBlockChange() : void{
+		if(!$this->canBeSupportedAt($this)){
+			$this->checkSupport();
+		}elseif($this->recalculateConnections()){
+			$this->position->getWorld()->setBlock($this->position, $this);
+		}
+	}
 
-		$this->collisionBoxes = null;
-
+	/**
+	 * Since 1.26.60 the client renders chorus plants from their connection states, so they are part of the persisted
+	 * state and must be recomputed when neighbours change.
+	 *
+	 * @return bool whether any connection changed
+	 */
+	protected function recalculateConnections() : bool{
+		$changed = false;
 		foreach(Facing::ALL as $facing){
-			$block = $this->getSide($facing);
-			if(match($block->getTypeId()){
-				BlockTypeIds::END_STONE, BlockTypeIds::CHORUS_FLOWER, $this->getTypeId() => true,
+			$connected = match($this->getSide($facing)->getTypeId()){
+				BlockTypeIds::CHORUS_FLOWER, $this->getTypeId() => true,
+				BlockTypeIds::END_STONE => $facing === Facing::DOWN,
 				default => false
-			}){
-				$this->connections[$facing] = true;
-			}else{
-				unset($this->connections[$facing]);
+			};
+			if($connected !== $this->isConnectedAt($facing)){
+				$this->setConnectedAt($facing, $connected);
+				$changed = true;
 			}
 		}
-
-		return $this;
+		return $changed;
 	}
 
 	private function canBeSupportedAt(Block $block) : bool{

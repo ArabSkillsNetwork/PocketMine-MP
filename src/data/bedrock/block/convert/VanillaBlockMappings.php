@@ -41,6 +41,7 @@ use pocketmine\block\Candle;
 use pocketmine\block\CaveVines;
 use pocketmine\block\ChiseledBookshelf;
 use pocketmine\block\ChorusFlower;
+use pocketmine\block\ChorusPlant;
 use pocketmine\block\CocoaBlock;
 use pocketmine\block\Copper;
 use pocketmine\block\CopperLantern;
@@ -77,6 +78,7 @@ use pocketmine\block\RedMushroomBlock;
 use pocketmine\block\RedstoneComparator;
 use pocketmine\block\RedstoneRepeater;
 use pocketmine\block\RedstoneTorch;
+use pocketmine\block\RedstoneWire;
 use pocketmine\block\RespawnAnchor;
 use pocketmine\block\Sapling;
 use pocketmine\block\SeaPickle;
@@ -104,6 +106,7 @@ use pocketmine\block\utils\LeverFacing;
 use pocketmine\block\utils\MobHeadType;
 use pocketmine\block\utils\MushroomBlockType;
 use pocketmine\block\utils\PoweredByRedstone;
+use pocketmine\block\utils\RedstoneWireConnection;
 use pocketmine\block\VanillaBlocks as Blocks;
 use pocketmine\block\Vine;
 use pocketmine\data\bedrock\block\BlockLegacyMetadata;
@@ -185,7 +188,6 @@ final class VanillaBlockMappings{
 		$reg->mapSimple(Blocks::CHISELED_STONE_BRICKS(), Ids::CHISELED_STONE_BRICKS);
 		$reg->mapSimple(Blocks::CHISELED_TUFF(), Ids::CHISELED_TUFF);
 		$reg->mapSimple(Blocks::CHISELED_TUFF_BRICKS(), Ids::CHISELED_TUFF_BRICKS);
-		$reg->mapSimple(Blocks::CHORUS_PLANT(), Ids::CHORUS_PLANT);
 		$reg->mapSimple(Blocks::CLAY(), Ids::CLAY);
 		$reg->mapSimple(Blocks::COAL(), Ids::COAL_BLOCK);
 		$reg->mapSimple(Blocks::COAL_ORE(), Ids::COAL_ORE);
@@ -1412,8 +1414,37 @@ final class VanillaBlockMappings{
 		$reg->mapModel(Model::create(Blocks::FARMLAND(), Ids::FARMLAND)->properties([
 			new IntProperty(StateNames::MOISTURIZED_AMOUNT, 0, 7, fn(Farmland $b) => $b->getWetness(), fn(Farmland $b, int $v) => $b->setWetness($v))
 		]));
+		$reg->mapModel(Model::create(Blocks::CHORUS_PLANT(), Ids::CHORUS_PLANT)->properties(array_map(
+			fn(int $facing) => new BoolProperty(
+				match($facing){
+					Facing::DOWN => StateNames::MC_CONNECTION_DOWN,
+					Facing::UP => StateNames::MC_CONNECTION_UP,
+					Facing::NORTH => StateNames::MC_CONNECTION_NORTH,
+					Facing::SOUTH => StateNames::MC_CONNECTION_SOUTH,
+					Facing::WEST => StateNames::MC_CONNECTION_WEST,
+					Facing::EAST => StateNames::MC_CONNECTION_EAST,
+				},
+				fn(ChorusPlant $b) => $b->isConnectedAt($facing),
+				fn(ChorusPlant $b, bool $v) => $b->setConnectedAt($facing, $v)
+			),
+			Facing::ALL
+		)));
 		$reg->mapModel(Model::create(Blocks::FIRE(), Ids::FIRE)->properties([
-			new IntProperty(StateNames::AGE, 0, 15, fn(Fire $b) => $b->getAge(), fn(Fire $b, int $v) => $b->setAge($v))
+			new IntProperty(StateNames::AGE, 0, 15, fn(Fire $b) => $b->getAge(), fn(Fire $b, int $v) => $b->setAge($v)),
+			...array_map(
+				fn(int $facing) => new BoolProperty(
+					match($facing){
+						Facing::UP => StateNames::MC_CONNECTION_UP,
+						Facing::NORTH => StateNames::MC_CONNECTION_NORTH,
+						Facing::SOUTH => StateNames::MC_CONNECTION_SOUTH,
+						Facing::WEST => StateNames::MC_CONNECTION_WEST,
+						Facing::EAST => StateNames::MC_CONNECTION_EAST,
+					},
+					fn(Fire $b) => $b->isConnectedAt($facing),
+					fn(Fire $b, bool $v) => $b->setConnectedAt($facing, $v)
+				),
+				[Facing::UP, ...Facing::HORIZONTAL]
+			)
 		]));
 		$reg->mapModel(Model::create(Blocks::FLOWER_POT(), Ids::FLOWER_POT)->properties([
 			BoolProperty::unused(StateNames::UPDATE_BIT, false)
@@ -1502,7 +1533,23 @@ final class VanillaBlockMappings{
 		$reg->mapModel(Model::create(Blocks::RAIL(), Ids::RAIL)->properties([
 			new IntProperty(StateNames::RAIL_DIRECTION, 0, 9, fn(Rail $b) => $b->getShape(), fn(Rail $b, int $v) => $b->setShape($v))
 		]));
-		$reg->mapModel(Model::create(Blocks::REDSTONE_WIRE(), Ids::REDSTONE_WIRE)->properties([$commonProperties->analogRedstoneSignal]));
+		$reg->mapModel(Model::create(Blocks::REDSTONE_WIRE(), Ids::REDSTONE_WIRE)->properties([
+			$commonProperties->analogRedstoneSignal,
+			...array_map(
+				fn(int $facing) => new ValueFromStringProperty(
+					match($facing){
+						Facing::NORTH => StateNames::REDSTONE_NORTH,
+						Facing::SOUTH => StateNames::REDSTONE_SOUTH,
+						Facing::WEST => StateNames::REDSTONE_WEST,
+						Facing::EAST => StateNames::REDSTONE_EAST,
+					},
+					ValueMappings::getInstance()->redstoneWireConnection,
+					fn(RedstoneWire $b) => $b->getConnection($facing),
+					fn(RedstoneWire $b, RedstoneWireConnection $v) => $b->setConnection($facing, $v)
+				),
+				Facing::HORIZONTAL
+			)
+		]));
 		$reg->mapModel(Model::create(Blocks::RESPAWN_ANCHOR(), Ids::RESPAWN_ANCHOR)->properties([
 			new IntProperty(StateNames::RESPAWN_ANCHOR_CHARGE, 0, 4, fn(RespawnAnchor $b) => $b->getCharges(), fn(RespawnAnchor $b, int $v) => $b->setCharges($v))
 		]));

@@ -27,7 +27,9 @@ use pocketmine\block\utils\Ageable;
 use pocketmine\block\utils\AgeableTrait;
 use pocketmine\block\utils\BlockEventHelper;
 use pocketmine\block\utils\SupportType;
+use pocketmine\data\runtime\RuntimeDataDescriber;
 use pocketmine\event\block\BlockBurnEvent;
+use pocketmine\math\Axis;
 use pocketmine\math\Facing;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\World;
@@ -40,6 +42,69 @@ class Fire extends BaseFire implements Ageable{
 	use AgeableTrait;
 
 	public const MAX_AGE = 15;
+
+	/**
+	 * Faces which fire can visually attach to. Fire never attaches to the block it's standing on.
+	 */
+	private const CONNECTABLE_FACES = [Facing::NORTH, Facing::SOUTH, Facing::WEST, Facing::EAST, Facing::UP];
+
+	/**
+	 * @var int[] facing => facing
+	 * @phpstan-var array<int, int>
+	 */
+	protected array $connections = [];
+	protected bool $connectedUp = false;
+
+	protected function describeBlockOnlyState(RuntimeDataDescriber $w) : void{
+		$w->boundedIntAuto(0, self::MAX_AGE, $this->age);
+		$w->horizontalFacingFlags($this->connections);
+		$w->bool($this->connectedUp);
+	}
+
+	/**
+	 * Returns whether the fire is visually attached to the block on the given side.
+	 * @param int $facing one of Facing::NORTH/EAST/SOUTH/WEST/UP
+	 */
+	public function isConnectedAt(int $facing) : bool{
+		return $facing === Facing::UP ? $this->connectedUp : isset($this->connections[$facing]);
+	}
+
+	/**
+	 * @param int $facing one of Facing::NORTH/EAST/SOUTH/WEST/UP
+	 * @return $this
+	 */
+	public function setConnectedAt(int $facing, bool $connected) : self{
+		if($facing === Facing::UP){
+			$this->connectedUp = $connected;
+		}elseif(Facing::axis($facing) !== Axis::Y){
+			if($connected){
+				$this->connections[$facing] = $facing;
+			}else{
+				unset($this->connections[$facing]);
+			}
+		}else{
+			throw new \InvalidArgumentException("Fire can't be connected to the block below it");
+		}
+		return $this;
+	}
+
+	/**
+	 * Since 1.26.60 the client renders fire from its connection states, so they are part of the persisted state and
+	 * must be recomputed when neighbours change. Fire attaches to every flammable block around it.
+	 *
+	 * @return bool whether any connection changed
+	 */
+	protected function recalculateConnections() : bool{
+		$changed = false;
+		foreach(self::CONNECTABLE_FACES as $facing){
+			$connected = $this->getSide($facing)->isFlammable();
+			if($connected !== $this->isConnectedAt($facing)){
+				$this->setConnectedAt($facing, $connected);
+				$changed = true;
+			}
+		}
+		return $changed;
+	}
 
 	protected function getFireDamage() : int{
 		return 1;
@@ -57,6 +122,9 @@ class Fire extends BaseFire implements Ageable{
 		}elseif(!$this->canBeSupportedBy($this->getSide(Facing::DOWN)) && !$this->hasAdjacentFlammableBlocks()){
 			$world->setBlock($this->position, VanillaBlocks::AIR());
 		}else{
+			if($this->recalculateConnections()){
+				$world->setBlock($this->position, $this);
+			}
 			$world->scheduleDelayedBlockUpdate($this->position, mt_rand(30, 40));
 		}
 	}

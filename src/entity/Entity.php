@@ -1529,7 +1529,8 @@ abstract class Entity{
 			}, $this->attributeMap->getAll()),
 			$this->getAllNetworkData(),
 			new PropertySyncData([], []),
-			[] //TODO: entity links
+			[], //TODO: entity links
+			null //TODO: passenger of block
 		));
 	}
 

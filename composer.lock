@@ -182,12 +182,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockBlockUpgradeSchema.git",
-                "reference": "37775d5aa19314a8f896b250429ddaa16cdf4282"
+                "reference": "6610b8df78b1910d4a4f149fc358624dafa4a1bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockBlockUpgradeSchema/zipball/37775d5aa19314a8f896b250429ddaa16cdf4282",
-                "reference": "37775d5aa19314a8f896b250429ddaa16cdf4282",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockBlockUpgradeSchema/zipball/6610b8df78b1910d4a4f149fc358624dafa4a1bf",
+                "reference": "6610b8df78b1910d4a4f149fc358624dafa4a1bf",
                 "shasum": ""
             },
             "default-branch": true,
@@ -199,7 +199,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockBlockUpgradeSchema/tree/master"
             },
-            "time": "2026-09-25T22:42:39+00:00"
+            "time": "2026-10-28T22:59:35+00:00"
         },
         {
             "name": "pocketmine/bedrock-data",
@@ -207,12 +207,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockData.git",
-                "reference": "75f0393ab6cf3b6da4b2b07845342c47636d8a8a"
+                "reference": "e142e38ff877181fd4e2feedffc4325b5a0d64a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockData/zipball/75f0393ab6cf3b6da4b2b07845342c47636d8a8a",
-                "reference": "75f0393ab6cf3b6da4b2b07845342c47636d8a8a",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockData/zipball/e142e38ff877181fd4e2feedffc4325b5a0d64a0",
+                "reference": "e142e38ff877181fd4e2feedffc4325b5a0d64a0",
                 "shasum": ""
             },
             "default-branch": true,
@@ -224,7 +224,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockData/tree/master"
             },
-            "time": "2026-09-23T21:22:49+00:00"
+            "time": "2026-10-28T22:59:07+00:00"
         },
         {
             "name": "pocketmine/bedrock-item-upgrade-schema",
@@ -232,12 +232,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockItemUpgradeSchema.git",
-                "reference": "e19685d2e7e76eb7446115c556df34e5d627d072"
+                "reference": "c4f97920734035b273bbe93100611a3d92cf6c24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockItemUpgradeSchema/zipball/e19685d2e7e76eb7446115c556df34e5d627d072",
-                "reference": "e19685d2e7e76eb7446115c556df34e5d627d072",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockItemUpgradeSchema/zipball/c4f97920734035b273bbe93100611a3d92cf6c24",
+                "reference": "c4f97920734035b273bbe93100611a3d92cf6c24",
                 "shasum": ""
             },
             "default-branch": true,
@@ -249,7 +249,7 @@
             "support": {
                 "source": "https://github.com/ArabSkillsNetwork/BedrockItemUpgradeSchema/tree/master"
             },
-            "time": "2026-05-06T13:12:04+00:00"
+            "time": "2026-10-28T22:59:45+00:00"
         },
         {
             "name": "pocketmine/bedrock-protocol",
@@ -257,12 +257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArabSkillsNetwork/BedrockProtocol.git",
-                "reference": "1d17d7a181df44ac8dfb93ce906897be73026465"
+                "reference": "7c00cf67ba285595c8db06ec62b5a16db078bb44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/1d17d7a181df44ac8dfb93ce906897be73026465",
-                "reference": "1d17d7a181df44ac8dfb93ce906897be73026465",
+                "url": "https://api.github.com/repos/ArabSkillsNetwork/BedrockProtocol/zipball/7c00cf67ba285595c8db06ec62b5a16db078bb44",
+                "reference": "7c00cf67ba285595c8db06ec62b5a16db078bb44",
                 "shasum": ""
             },
             "require": {
@@ -303,9 +303,9 @@
             ],
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
-                "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/master"
+                "source": "https://github.com/ArabSkillsNetwork/BedrockProtocol/tree/7.0.0+bedrock-1.26.60"
             },
-            "time": "2026-09-30T03:34:25+00:00"
+            "time": "2026-10-28T22:58:45+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
