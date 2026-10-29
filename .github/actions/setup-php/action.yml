@@ -1,0 +1,44 @@
+name: 'Setup PHP for PocketMine-MP'
+description: 'Install PHP from ArabSkillsNetwork/PHP-Binaries and Composer (same as pmmp/setup-php-action, but using our patched binaries)'
+inputs:
+  php-version:
+    required: true
+    description: 'PHP version to install, e.g. "8.2"'
+  install-path:
+    required: true
+    description: 'Path to install the binary to'
+  pm-version-major:
+    required: false
+    description: 'Major version of PocketMine-MP to install PHP for, e.g. "5"'
+    default: '5'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install PHP and Composer
+      shell: bash
+      env:
+        PHP_VERSION: ${{ inputs.php-version }}
+        INSTALL_PATH: ${{ inputs.install-path }}
+        PM_MAJOR: ${{ inputs.pm-version-major }}
+      run: |
+        set -euo pipefail
+        url="https://github.com/ArabSkillsNetwork/PHP-Binaries/releases/download/pm${PM_MAJOR}-php-${PHP_VERSION}-latest/PHP-${PHP_VERSION}-Linux-x86_64-PM${PM_MAJOR}.tar.gz"
+        echo "Downloading PHP binary: $url"
+        mkdir -p "$INSTALL_PATH"
+        curl -fsSL "$url" | tar -xz -C "$INSTALL_PATH"
+        bin_dir="$(cd "$INSTALL_PATH" && pwd)/bin/php7/bin"
+
+        ext_dir="$(find "$(dirname "$bin_dir")/lib/php/extensions" -maxdepth 1 -type d -name '*debug-zts*' 2>/dev/null | head -n 1 || true)"
+        if [ -n "$ext_dir" ]; then
+          if grep -q '^extension_dir' "$bin_dir/php.ini"; then
+            sed -i "s|^extension_dir.*$|extension_dir=\"$ext_dir\"|" "$bin_dir/php.ini"
+          else
+            printf '\nextension_dir="%s"\n' "$ext_dir" >> "$bin_dir/php.ini"
+          fi
+        fi
+
+        curl -fsSL https://getcomposer.org/download/latest-2.x/composer.phar -o "$bin_dir/composer"
+        chmod 755 "$bin_dir/composer"
+        echo "$bin_dir" >> "$GITHUB_PATH"
+        "$bin_dir/php" -v
