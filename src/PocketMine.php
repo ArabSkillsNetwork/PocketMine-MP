@@ -70,12 +70,26 @@ use const DIRECTORY_SEPARATOR;
 use const PHP_BINARY;
 use const PHP_EOL;
 use const PHP_INT_SIZE;
+use const PHP_MAJOR_VERSION;
+use const PHP_MINOR_VERSION;
 use const PHP_VERSION;
 use const ZEND_DEBUG_BUILD;
 
 	require_once __DIR__ . '/VersionInfo.php';
 
-	const MIN_PHP_VERSION = "8.1.0";
+	const MIN_PHP_VERSION = "8.2.35";
+
+	/**
+	 * Oldest release of each supported PHP branch which isn't vulnerable to CVE-2026-109618 and CVE-2026-109619
+	 * (PHP2Shell). MIN_PHP_VERSION alone isn't enough, because e.g. 8.3.0 is newer than 8.2.35 but still vulnerable.
+	 * Branches not listed here are newer than all of these and assumed to contain the fix.
+	 */
+	const MIN_PATCHED_PHP_VERSIONS = [
+		"8.2" => "8.2.35",
+		"8.3" => "8.3.36",
+		"8.4" => "8.4.27",
+		"8.5" => "8.5.12",
+	];
 
 	/**
 	 * @param string $message
@@ -99,6 +113,12 @@ use const ZEND_DEBUG_BUILD;
 			//If PHP version isn't high enough, anything below might break, so don't bother checking it.
 			return [
 				"PHP >= " . MIN_PHP_VERSION . " is required, but you have PHP " . PHP_VERSION . "."
+			];
+		}
+		$phpBranch = PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;
+		if(isset(MIN_PATCHED_PHP_VERSIONS[$phpBranch]) && version_compare(MIN_PATCHED_PHP_VERSIONS[$phpBranch], PHP_VERSION) > 0){
+			return [
+				"PHP " . PHP_VERSION . " is vulnerable to CVE-2026-109618 and CVE-2026-109619 (PHP2Shell). Please update to PHP " . MIN_PATCHED_PHP_VERSIONS[$phpBranch] . " or newer."
 			];
 		}
 
