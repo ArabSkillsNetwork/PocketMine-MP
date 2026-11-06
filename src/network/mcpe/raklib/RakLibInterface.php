@@ -196,6 +196,7 @@ class RakLibInterface implements ServerEventListener, AdvancedNetworkInterface{
 			$address,
 			$port
 		);
+		$session->getLogger()->info("Connected over RakNet");
 		$this->sessions[$sessionId] = $session;
 	}
 

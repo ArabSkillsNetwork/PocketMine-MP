@@ -58,6 +58,7 @@ use pocketmine\network\mcpe\compression\ZlibCompressor;
 use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\network\mcpe\encryption\EncryptionContext;
 use pocketmine\network\mcpe\EntityEventBroadcaster;
+use pocketmine\network\mcpe\nethernet\NetherNetInterface;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\PacketBroadcaster;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
@@ -134,6 +135,7 @@ use function cli_set_process_title;
 use function copy;
 use function count;
 use function date;
+use function extension_loaded;
 use function fclose;
 use function file_exists;
 use function file_put_contents;
@@ -154,6 +156,7 @@ use function microtime;
 use function min;
 use function mkdir;
 use function ob_end_flush;
+use function preg_match;
 use function preg_replace;
 use function realpath;
 use function register_shutdown_function;
@@ -1246,13 +1249,14 @@ class Server{
 		int $port,
 		bool $ipV6,
 		bool $useQuery,
+		bool $useRakLib,
 		PacketBroadcaster $packetBroadcaster,
 		EntityEventBroadcaster $entityEventBroadcaster,
 		TypeConverter $typeConverter
 	) : bool{
 		$prettyIp = $ipV6 ? "[$ip]" : $ip;
 		try{
-			$rakLibRegistered = $this->network->registerInterface(new RakLibInterface($this, $ip, $port, $ipV6, $packetBroadcaster, $entityEventBroadcaster, $typeConverter));
+			$rakLibRegistered = $useRakLib && $this->network->registerInterface(new RakLibInterface($this, $ip, $port, $ipV6, $packetBroadcaster, $entityEventBroadcaster, $typeConverter));
 		}catch(NetworkInterfaceStartException $e){
 			$this->logger->emergency($this->language->translate(KnownTranslationFactory::pocketmine_server_networkStartFailed(
 				$ip,
@@ -1275,6 +1279,56 @@ class Server{
 		return true;
 	}
 
+	private function startupPrepareNetherNetInterface(
+		PacketBroadcaster $packetBroadcaster,
+		EntityEventBroadcaster $entityEventBroadcaster,
+		TypeConverter $typeConverter
+	) : bool{
+		if(!extension_loaded("nethernet")){
+			$this->logger->emergency("network.transport needs NetherNet, but the nethernet PHP extension is not loaded (extension=php_nethernet.dll)");
+			return false;
+		}
+		//relative paths in pocketmine.yml are relative to the server data folder
+		$resolvePath = function(string $path) : ?string{
+			if($path === ""){
+				return null;
+			}
+			return preg_match('/^([a-zA-Z]:)?[\\\\\/]/', $path) === 1 ? $path : Path::join($this->dataPath, $path);
+		};
+		try{
+			$interface = new NetherNetInterface(
+				$this,
+				$this->configGroup->getPropertyString(Yml::NETWORK_NETHERNET_URL, "0.0.0.0:19132"),
+				$resolvePath($this->configGroup->getPropertyString(Yml::NETWORK_NETHERNET_OPERATOR_KEY, "nethernet_operator_key.pem")) ?? Path::join($this->dataPath, "nethernet_operator_key.pem"),
+				$this->configGroup->getPropertyString(Yml::NETWORK_NETHERNET_OPERATOR_DOMAIN, ""),
+				$this->configGroup->getPropertyBool(Yml::NETWORK_NETHERNET_OPERATOR_CPK_SPKI, true),
+				$this->configGroup->getPropertyBool(Yml::NETWORK_NETHERNET_ALLOW_UNAUTHENTICATED, false),
+				$resolvePath($this->configGroup->getPropertyString(Yml::NETWORK_NETHERNET_TLS_CERT, "")),
+				$resolvePath($this->configGroup->getPropertyString(Yml::NETWORK_NETHERNET_TLS_KEY, "")),
+				$this->configGroup->getPropertyInt("network.nethernet.ice-port", 0),
+				$this->configGroup->getPropertyInt("network.nethernet.mtu", 0),
+				$this->configGroup->getPropertyString("network.nethernet.advertise-addresses", ""),
+				$this->configGroup->getPropertyString("network.nethernet.trusted-proxies", ""),
+				$this->configGroup->getPropertyString("network.nethernet.real-ip-header", "X-Forwarded-For"),
+				$this->configGroup->getPropertyBool("network.nethernet.reject-banned", false),
+				$this->configGroup->getPropertyBool("network.nethernet.reject-not-whitelisted", false),
+				$this->configGroup->getPropertyBool("network.nethernet.reject-when-full", false),
+				$packetBroadcaster,
+				$entityEventBroadcaster,
+				$typeConverter
+			);
+			$this->network->registerInterface($interface);
+		}catch(NetworkInterfaceStartException|\InvalidArgumentException $e){
+			$this->logger->emergency("Failed to start NetherNet: " . $e->getMessage());
+			return false;
+		}
+		$this->logger->info("NetherNet signaling running on " . $interface->getUrl() . ($interface->isHttps() ? "" : " (plain http: players are asked to trust this server once)"));
+		if($this->configGroup->getPropertyBool(Yml::NETWORK_NETHERNET_ALLOW_UNAUTHENTICATED, false)){
+			$this->logger->warning("network.nethernet.allow-unauthenticated is on: players without a Minecraft identity can join over NetherNet");
+		}
+		return true;
+	}
+
 	private function startupPrepareNetworkInterfaces() : bool{
 		$useQuery = $this->configGroup->getConfigBool(ServerProperties::ENABLE_QUERY, true);
 
@@ -1282,13 +1336,28 @@ class Server{
 		$packetBroadcaster = new StandardPacketBroadcaster($this);
 		$entityEventBroadcaster = new StandardEntityEventBroadcaster($packetBroadcaster, $typeConverter);
 
+		$transport = strtolower($this->configGroup->getPropertyString(Yml::NETWORK_TRANSPORT, "both"));
+		if($transport !== "raknet" && $transport !== "nethernet" && $transport !== "both"){
+			$this->logger->warning("Unknown network.transport \"$transport\" in pocketmine.yml, expected raknet, nethernet or both; using both");
+			$transport = "both";
+		}
+		$useRakLib = $transport !== "nethernet";
+		$useNetherNet = $transport !== "raknet";
+
 		if(
-			!$this->startupPrepareConnectableNetworkInterfaces($this->getIp(), $this->getPort(), false, $useQuery, $packetBroadcaster, $entityEventBroadcaster, $typeConverter) ||
+			($useRakLib || $useQuery) &&
 			(
-				$this->configGroup->getConfigBool(ServerProperties::ENABLE_IPV6, true) &&
-				!$this->startupPrepareConnectableNetworkInterfaces($this->getIpV6(), $this->getPortV6(), true, $useQuery, $packetBroadcaster, $entityEventBroadcaster, $typeConverter)
+				!$this->startupPrepareConnectableNetworkInterfaces($this->getIp(), $this->getPort(), false, $useQuery, $useRakLib, $packetBroadcaster, $entityEventBroadcaster, $typeConverter) ||
+				(
+					$this->configGroup->getConfigBool(ServerProperties::ENABLE_IPV6, true) &&
+					!$this->startupPrepareConnectableNetworkInterfaces($this->getIpV6(), $this->getPortV6(), true, $useQuery, $useRakLib, $packetBroadcaster, $entityEventBroadcaster, $typeConverter)
+				)
 			)
 		){
+			return false;
+		}
+
+		if($useNetherNet && !$this->startupPrepareNetherNetInterface($packetBroadcaster, $entityEventBroadcaster, $typeConverter)){
 			return false;
 		}
 
@@ -1490,7 +1559,16 @@ class Server{
 			$commandLine = $ev->getCommand();
 		}
 
-		return $this->commandMap->dispatch($sender, $commandLine);
+		$result = $this->commandMap->dispatch($sender, $commandLine);
+
+		//NetherNet keeps its own copy of bans/whitelist/ops to refuse players early and any command may have changed them.
+		foreach($this->network->getInterfaces() as $interface){
+			if($interface instanceof NetherNetInterface){
+				$interface->onCommandDispatched();
+			}
+		}
+
+		return $result;
 	}
 
 	/**

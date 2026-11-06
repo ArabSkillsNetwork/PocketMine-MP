@@ -12,6 +12,7 @@ crashdumps/*
 *.phar
 server.properties
 /pocketmine.yml
+/nethernet_operator_key.pem
 /plugin_list.yml
 memory_dumps/*
 resource_packs/

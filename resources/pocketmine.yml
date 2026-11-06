@@ -82,6 +82,57 @@ network:
   #Enable encryption of Minecraft network traffic. This has an impact on performance, but prevents hackers from stealing sessions and pretending to be other players.
   #DO NOT DISABLE THIS unless you understand the risks involved.
   enable-encryption: true
+  #Transports players can join with:
+  # raknet    - classic UDP RakNet on server-port
+  # nethernet - NetherNet (WebRTC data channels + HTTP signaling), needs the nethernet PHP extension
+  # both      - RakNet and NetherNet side by side (default)
+  transport: both
+  nethernet:
+    #Signaling listener. Can share server-port with RakNet: RakNet is UDP, signaling is TCP.
+    #"0.0.0.0:19132" picks https when tls-cert and tls-key are set, http otherwise. "http://" / "https://" force one.
+    #Plain http makes the client ask "do you trust this server?" once; https with a certificate the client trusts
+    #(e.g. Let's Encrypt for your domain, players joining with that domain) avoids it.
+    url: "0.0.0.0:19132"
+    #PEM certificate (full chain) and private key for https. Relative paths are relative to the server data folder.
+    tls-cert: ""
+    tls-key: ""
+    #UDP port all NetherNet (WebRTC) traffic uses. 0 = a random one, which DDoS-protected hosts usually drop or
+    #rate-limit. Set a fixed port and have it allowed (with a NetherNet profile, if your host has one). It cannot be
+    #the RakNet game port when transport is "both".
+    ice-port: 0
+    #WebRTC packet size. 0 = default. Lower it to 1000 or 900 if players on VPNs, PPPoE or mobile data connect but
+    #cannot finish joining.
+    mtu: 0
+    #Comma separated public IPs offered to clients next to the server's own addresses, on the same port. Needed behind
+    #NAT, in Docker or on cloud VMs whose own address players can't reach. Requires a 1:1 UDP port forward of ice-port.
+    advertise-addresses: ""
+    #Comma separated IPs of reverse proxies in front of signaling. Their requests must carry the player's IP in
+    #real-ip-header (used for bans and per-IP limits) or they are refused. Leave empty without a proxy.
+    trusted-proxies: ""
+    #Header the trusted proxies put the player's IP in: "X-Forwarded-For" (its last entry), "X-Real-IP" or "CF-Connecting-IP".
+    real-ip-header: "X-Forwarded-For"
+    #P-384 key the server signs its identity with, generated if missing. Keep it stable: clients pin it.
+    operator-key: "nethernet_operator_key.pem"
+    #idp.domain in the server identity sent to clients
+    operator-domain: ""
+    #Encoding of the operator key in that identity. true = base64 SPKI, what live clients use: with it the client
+    #remembers a trusted server. false = a JWK object (clients ask to trust every join).
+    operator-cpk-spki: true
+    #Admit clients that send no Minecraft identity at all (LAN/testing). An invalid identity is always refused.
+    #DO NOT ENABLE THIS on a public server.
+    allow-unauthenticated: false
+    #Refuse banned players at signaling before any WebRTC setup (cheaper).
+    #PocketMine still checks everyone, but refused players only see a generic connection failure instead of the kick message.
+    #Name checks apply only to authenticated (non open-mode) joins.
+    reject-banned: false
+    #Refuse non-whitelisted players at signaling before any WebRTC setup (cheaper).
+    #PocketMine still checks everyone, but refused players only see a generic connection failure instead of the kick message.
+    #Name checks apply only to authenticated (non open-mode) joins.
+    reject-not-whitelisted: false
+    #Refuse full-server joins at signaling before any WebRTC setup (cheaper).
+    #PocketMine still checks everyone, but refused players only see a generic connection failure instead of the kick message.
+    #This ignores plugins that let players join a full server.
+    reject-when-full: false
 
 debug:
   #If > 1, it will show debug messages in the console

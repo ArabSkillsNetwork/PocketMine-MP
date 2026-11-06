@@ -35,13 +35,19 @@ use pocketmine\player\GameMode;
 use pocketmine\Server;
 use pocketmine\ServerProperties;
 use pocketmine\utils\Config;
+use pocketmine\utils\Filesystem;
 use pocketmine\utils\Internet;
 use pocketmine\utils\InternetException;
 use pocketmine\utils\Utils;
 use pocketmine\VersionInfo;
 use Symfony\Component\Filesystem\Path;
+use function array_keys;
+use function array_values;
 use function fgets;
+use function file_exists;
+use function file_put_contents;
 use function sleep;
+use function str_replace;
 use function strtolower;
 use function trim;
 use const PHP_EOL;
@@ -144,9 +150,51 @@ LICENSE;
 		$this->message($this->lang->translate(KnownTranslationFactory::server_properties()));
 	}
 
-	private function askPort(Translatable $prompt, int $default) : int{
+	/**
+	 * Asks the main NetherNet settings and writes them to pocketmine.yml (normally created by the server on first start)
+	 */
+	private function netherNetConfig(int $serverPort) : void{
+		$path = Path::join($this->dataPath, "pocketmine.yml");
+		if(file_exists($path)){
+			return;
+		}
+
+		$this->message("NetherNet is the WebRTC transport Minecraft uses next to RakNet. It needs the nethernet PHP extension.");
+		do{
+			$transport = strtolower($this->getInput("Transport (raknet, nethernet or both)", "both"));
+		}while($transport !== "raknet" && $transport !== "nethernet" && $transport !== "both");
+
+		$replace = ["\n  transport: both\n" => "\n  transport: $transport\n"];
+		if($transport !== "raknet"){
+			$signalingPort = $this->askPort("NetherNet signaling port (TCP, can be the same as the server port)", $serverPort);
+			$this->message("WebRTC traffic uses one UDP port. 0 picks a random one, which DDoS-protected hosts usually drop: set a fixed port and allow it on your host.");
+			do{
+				$icePort = (int) $this->getInput("NetherNet ICE port (UDP, 0 = random)", "0");
+			}while($icePort < 0 || $icePort > 65535 || ($transport === "both" && $icePort === $serverPort));
+			$this->message("With a certificate for your domain (e.g. Let's Encrypt) signaling uses https and players aren't asked to trust the server. Leave empty for plain http.");
+			$tlsCert = $this->getInput("TLS certificate file (fullchain.pem)", "");
+			$tlsKey = $tlsCert !== "" ? $this->getInput("TLS private key file (privkey.pem)", "") : "";
+
+			$replace["\n    url: \"0.0.0.0:19132\"\n"] = "\n    url: \"0.0.0.0:$signalingPort\"\n";
+			$replace["\n    ice-port: 0\n"] = "\n    ice-port: $icePort\n";
+			if($tlsCert !== "" && $tlsKey !== ""){
+				$replace["\n    tls-cert: \"\"\n"] = "\n    tls-cert: \"" . str_replace(["\\", "\""], ["/", ""], $tlsCert) . "\"\n";
+				$replace["\n    tls-key: \"\"\n"] = "\n    tls-key: \"" . str_replace(["\\", "\""], ["/", ""], $tlsKey) . "\"\n";
+			}
+		}
+
+		$content = Filesystem::fileGetContents(Path::join(\pocketmine\RESOURCE_PATH, "pocketmine.yml"));
+		$content = str_replace("\r\n", "\n", $content);
+		$content = str_replace(array_keys($replace), array_values($replace), $content);
+		if(VersionInfo::IS_DEVELOPMENT_BUILD){
+			$content = str_replace("preferred-channel: stable", "preferred-channel: beta", $content);
+		}
+		file_put_contents($path, $content);
+	}
+
+	private function askPort(Translatable|string $prompt, int $default) : int{
 		while(true){
-			$port = (int) $this->getInput($this->lang->translate($prompt), (string) $default);
+			$port = (int) $this->getInput($prompt instanceof Translatable ? $this->lang->translate($prompt) : $prompt, (string) $default);
 			if($port <= 0 || $port > 65535){
 				$this->error($this->lang->translate(KnownTranslationFactory::invalid_port()));
 				continue;
@@ -161,8 +209,9 @@ LICENSE;
 
 		$this->message($this->lang->translate(KnownTranslationFactory::port_warning()));
 
-		$config->set(ServerProperties::SERVER_PORT_IPV4, $this->askPort(KnownTranslationFactory::server_port_v4(), Server::DEFAULT_PORT_IPV4));
+		$config->set(ServerProperties::SERVER_PORT_IPV4, $portV4 = $this->askPort(KnownTranslationFactory::server_port_v4(), Server::DEFAULT_PORT_IPV4));
 		$config->set(ServerProperties::SERVER_PORT_IPV6, $this->askPort(KnownTranslationFactory::server_port_v6(), Server::DEFAULT_PORT_IPV6));
+		$this->netherNetConfig($portV4);
 
 		$this->message($this->lang->translate(KnownTranslationFactory::gamemode_info()));
 

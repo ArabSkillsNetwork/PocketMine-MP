@@ -175,6 +175,8 @@ class NetworkSession{
 	private ?CompoundTag $cachedOfflinePlayerData = null;
 
 	private ?EncryptionContext $cipher = null;
+	/** The transport encrypts the connection itself (NetherNet), so the Minecraft cipher is skipped */
+	private bool $transportEncrypted = false;
 
 	/**
 	 * @var string[]
@@ -334,6 +336,17 @@ class NetworkSession{
 
 	public function getPort() : int{
 		return $this->port;
+	}
+
+	public function isTransportEncrypted() : bool{
+		return $this->transportEncrypted;
+	}
+
+	/**
+	 * @see NetworkSession::$transportEncrypted
+	 */
+	public function setTransportEncrypted(bool $transportEncrypted) : void{
+		$this->transportEncrypted = $transportEncrypted;
 	}
 
 	public function getDisplayName() : string{
@@ -993,10 +1006,12 @@ class NetworkSession{
 				}
 				$this->sendDataPacket(ServerToClientHandshakePacket::create($handshakeJwt), true); //make sure this gets sent before encryption is enabled
 
-				$this->cipher = EncryptionContext::fakeGCM($encryptionKey);
+				if(!$this->transportEncrypted){
+					$this->cipher = EncryptionContext::fakeGCM($encryptionKey);
+				}
 
 				$this->setHandler(new HandshakePacketHandler($this->onServerLoginSuccess(...)));
-				$this->logger->debug("Enabled encryption");
+				$this->logger->debug($this->transportEncrypted ? "Encryption handshake completed, encryption is handled by the transport" : "Enabled encryption");
 			}));
 		}else{
 			$this->onServerLoginSuccess();
